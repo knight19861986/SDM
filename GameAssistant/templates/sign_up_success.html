@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %} 
+    <div>
+        <H1 ALIGN="center">Signed up successfully!</H1>
+    </div>
+    <div>
+        <a href="/gameassistant/sign-in/">Click to go to sign in</a>
+    </div>
+    <br>
+    <form name="button_back_to_home" action="{% url 'GameAssistant:home_index' %}">
+        <input type="submit" value="Back to home"/>       
+    </form>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<div>
+<H1 ALIGN="center">Initiate a game</H1>
+</div>
+
+<div>
+<form name="form_intitiate_game" method="post" action="{% url 'GameAssistant:game_create' %}" onSubmit="return gameFieldsCheck()">{% csrf_token %}
+    <table border="0">
+        <tbody>
+            <tr>
+                <div style="color:#E74C3C">
+                    {{ error_msg }}
+                </div>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Num of players:</td>
+                <td>
+                    <select name="num_of_players">
+                        <script language="javascript" type="text/javascript">
+                        for(var d=4;d<=16;d++)
+                        {
+                            document.write("<option>"+d+"</option>");
+                        }
+                        </script>
+                    </select>
+
+                </td>
+
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Game Code:</td>
+                <td><input type="text" name="game_code"></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Start" />  
+                    <input type="reset" value="Reset"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<br>
+<form name="button_profile" method="post" action="{% url 'GameAssistant:start_profile' '' %}">{% csrf_token %}
+    <input type="submit" value="Profile"/>       
+</form>
+<br>
+<form name="button_logout" method="post" action="{% url 'GameAssistant:start_exit' %}">{% csrf_token %}
+    <input type="submit" value="Logout"/>       
+</form>
+
+<script language="javascript">
+    function gameFieldsCheck() {
+        if (document.form_intitiate_game.game_code.value === "") {
+            window.alert("The game code is empty!");
+            return false;
+        }
+        return true;
+    }
+
+</script> 
+
+{% endblock %}

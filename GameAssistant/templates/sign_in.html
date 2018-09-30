@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<div>
+<H1 ALIGN="center">Sign-in</H1>
+</div>
+
+<div>
+<H2 ALIGN="left">To sign-in</H2>
+</div>
+<form name="form_sign_in" method="post" action="{% url 'GameAssistant:start_enter' %}"  onSubmit="return userFieldsCheck()">{% csrf_token %}
+    <table border="0">
+        <tbody>
+            <tr>
+                <div style="color:#E74C3C">
+                    {{ error_msg }}
+                </div>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Username:</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Password:</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Submit" />  
+                    <input type="reset" value="Reset"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<br>
+<form name="button_back_to_home" action="{% url 'GameAssistant:home_index' %}">
+    <input type="submit" value="Back to home"/>       
+</form>
+
+<script language="javascript">
+    function userFieldsCheck() {
+        if (document.form_sign_in.username.value === "") {
+            window.alert("The username is empty!");
+            return false;
+        }
+        if (document.form_sign_in.password.value === "") {
+            window.alert("The password is empty!");
+            return false;
+        }
+        return true;
+    }
+</script> 
+
+{% endblock %}

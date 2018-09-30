@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<div>
+    <H1 ALIGN="center">Game Assistant</H1>
+</div>
+<div>
+    <a href="sign-up/">Create a superuser account</a>
+</div>
+<div>
+    <a href="sign-in/">Already been a superuser</a>
+</div>
+<div>
+    <form name="form_join_game" method="post" action="{% url 'GameAssistant:home_index' %}" onSubmit="return fieldsCheck()">{% csrf_token %}
+        <table border="0">
+            <tbody>
+                <tr>
+                    <div style="color:#E74C3C">
+                        {{ error_msg }}
+                    </div>
+                </tr>
+                <tr>
+                    <td style="vertical-align:top">Input Game Code:</td>
+                    <td><input type="text" name="gamecode"></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <input type="submit" value="Join Game by Code" />  
+                    </td>
+                    <td>
+                        <input type="reset" value="Reset"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<script language="javascript">
+
+    function fieldsCheck() {
+        if (document.form_join_game.gamecode.value === "") {
+            window.alert("The game code is empty!");
+            return false;
+        }
+        return true;
+    }
+
+</script> 
+{% endblock %}

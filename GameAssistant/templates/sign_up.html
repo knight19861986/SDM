@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %} 
+<div>
+<H1 ALIGN="center">Create an account</H1>
+</div>
+
+<div>
+<H2 ALIGN="left">To sign-up</H2>
+</div>
+
+<form name="form_create_user" method="post" action="{% url 'GameAssistant:client_create' %}" onSubmit="return userFieldsCheck()">{% csrf_token %}
+    <table border="0">
+        <tbody>
+            <tr>
+                <div style="color:#E74C3C">
+                    {{ error_msg }}
+                </div>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Username:</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Password:</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Repeated Password:</td>
+                <td><input type="password" name="password2"></td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="Submit" />  
+                    <input type="reset" value="Reset"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
+<br>
+<form name="button_back_to_home" action="{% url 'GameAssistant:home_index' %}">
+    <input type="submit" value="Back to home"/>       
+</form>
+
+<script language="javascript">
+    function userFieldsCheck() {
+        if (document.form_create_user.username.value === "") {
+            window.alert("The username is empty!");
+            return false;
+        }
+        if (document.form_create_user.password.value === "") {
+            window.alert("The password is empty!");
+            return false;
+        }
+        if (document.form_create_user.password2.value !== form_create_user.password.value ) {
+            window.alert("The passwords are not the same!");
+            return false;
+        }
+        return true;
+    }
+</script> 
+{% endblock %}
