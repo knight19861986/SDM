@@ -18,7 +18,6 @@ def check_auth(auth_level):
                     else:
                         return HttpResponseBadRequest('COOKIES expired! Please sign in again!')
                 elif auth_level == 'guest':
-
                     if 'sessionid' in request.COOKIES:
                         sessionid = request.COOKIES.get('sessionid')
                         session = Session.objects.get(session_key=sessionid)
