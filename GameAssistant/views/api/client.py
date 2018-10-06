@@ -6,6 +6,7 @@ import re
 #from mongoengine import *
 from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
+from GameAssistant.models.subclients import SubClient
 from GameAssistant.libs.utils import check_auth
 
 @check_auth('guest')

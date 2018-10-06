@@ -11,17 +11,18 @@ def check_auth(auth_level):
                     if 'sessionid' in request.COOKIES:
                         sessionid = request.COOKIES.get('sessionid')
                         session = Session.objects.get(session_key=sessionid)
-                        if session:
+                        if session and session.get_decoded().get('client_id'):
                             return func(request, *callback_args, **callback_kwargs)
                         else:
-                            return HttpResponseBadRequest('Session not existed! Please sign in again!')
+                            return HttpResponseBadRequest('Session of superuser not existed! Please sign in again!')
                     else:
                         return HttpResponseBadRequest('COOKIES expired! Please sign in again!')
+
                 elif auth_level == 'guest':
                     if 'sessionid' in request.COOKIES:
                         sessionid = request.COOKIES.get('sessionid')
                         session = Session.objects.get(session_key=sessionid)
-                        if session:
+                        if session and session.get_decoded().get('client_id'):
                             url = reverse('GameAssistant:start_profile', args=[''])
                             return HttpResponseRedirect(url)
                         else:
