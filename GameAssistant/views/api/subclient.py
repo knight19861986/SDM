@@ -9,4 +9,16 @@ from django.shortcuts import render
 
 @check_auth('guest')
 def create(request):
-	return 0
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+
+
+    try:
+        game_code = request.POST.get('gamecode')
+
+        return 0
+
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running subclient.create! Details: {0}'.format(e))
+

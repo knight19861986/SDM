@@ -4,8 +4,17 @@ from GameAssistant.libs.utils import check_auth
 from django.shortcuts import render
 
 @check_auth('guest')
-def index(request):
-    return render(request, "home.html")
+def index(request, errorcode):
+    messages = {
+        '0': "Game code is not existed!",
+        '1': "Illegal game code!"
+    }
+    if errorcode in messages:
+        msg = messages.get(errorcode)
+    else:
+        msg =''
+        
+    return render(request, "home.html", {'error_msg': msg})
 
 ############### Remove later #################
 def tab(request):
