@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from GameAssistant.views.sites import home, start, going
-from GameAssistant.views.api import client, game
+from GameAssistant.views.api import client, subclient, game
 
 app_name =  "GameAssistant"
 urlpatterns = [
@@ -24,6 +24,10 @@ urlpatterns = [
 	############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),
     url(r'^client/ajax_profile/$', client.get_client, name='client_profile'),
+
+    ############### SubClient ##############
+    url(r'^subclient/create/$', subclient.create, name='subclient_create'),
+
 
     ############### Game ###################
     url(r'^game/create/$', game.create, name='game_create'),
