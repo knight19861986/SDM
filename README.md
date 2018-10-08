@@ -19,7 +19,7 @@ Step 2: Intallation and initiation of MongoDB
 (See https://docs.mongodb.com/guides/server/drivers/)
 4. Run `use testdb` to create the database we are going to use
 
-Step 3: Initiation and running the application
+Step 3: Initiation and running of the application
 1. Open a new terminal and run `python manage.py migrate` to apply the data migration
 2. Run the application server using `python manage.py runserver`
 3. Visit http://localhost:8000/gameassistant/ to verify if it is working.
