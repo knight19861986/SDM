@@ -44,7 +44,9 @@ Step 1: Intallation and configuration of python
 11. `pip install -r requirements.txt`
 
 Step 2: Intallation and initiation of MongoDB
+
 Will be updated later
 
 Step 3: Initiation and running the application
+
 Will be updated later
