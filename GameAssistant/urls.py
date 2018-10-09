@@ -20,6 +20,7 @@ urlpatterns = [
 
     ############### Going ##################
     url(r'^room/$', going.room, name='going_room'),
+    url(r'^room-guest/$', going.room_guest, name='going_room_guest'),
 
 	############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),

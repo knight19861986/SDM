@@ -6,14 +6,15 @@ from django.shortcuts import render
 @check_auth('guest')
 def index(request, errorcode):
     messages = {
-        '0': "Game code is not existed!",
-        '1': "Illegal game code!"
+        '0': "Illegal game code!",
+        '1': "Game code is not existed!",
+        '2': "Unexpected error happen! The host of the game is missing! Please try with another code!"
     }
     if errorcode in messages:
         msg = messages.get(errorcode)
     else:
         msg =''
-        
+
     return render(request, "home.html", {'error_msg': msg})
 
 ############### Remove later #################
