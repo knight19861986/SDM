@@ -9,7 +9,7 @@ def index(request, errorcode):
         '0': "Illegal game code!",
         '1': "Game code is not existed!",
         '2': "You have already joined a game!\nPlease quite the game before you join a new one!",
-        '3': "You don't have an on-going game!\nPlease join a new one!"
+        '3': "You don't have an on-going game!\nPlease join a new one!",
         '4': "Unexpected error happen!\nThe host of the game is missing! Please try with another code!",
         '5': "Unexpected error happen!\nThe game is already closed. Please try with another code!"
     }
