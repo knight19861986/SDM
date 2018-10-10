@@ -10,8 +10,7 @@ from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
 from GameAssistant.libs.utils import check_auth, game_ongoing
 
-@check_auth('superuser')
-@game_ongoing('no')
+@game_ongoing('no', 'superuser')
 def create(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -51,8 +50,7 @@ def create(request):
         return HttpResponseBadRequest('Unknown error while running game.create! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@game_ongoing('yes', 'superuser')
 def get_seats(request):
     try:
         sessionid = request.COOKIES.get('sessionid')
@@ -74,8 +72,7 @@ def get_seats(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@game_ongoing('yes', 'superuser')
 def get_game(request):
     try:
         sessionid = request.COOKIES.get('sessionid')
@@ -93,8 +90,7 @@ def get_game(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@game_ongoing('yes', 'superuser')
 def delete(request):
     try:
         if request.method != 'POST':

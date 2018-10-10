@@ -63,28 +63,46 @@ def check_auth(auth_level):
         return wrapper
     return _check_auth
 
-def game_ongoing(yes_or_no):
+def game_ongoing(yes_or_no, auth_level):
     def _game_ongoing(func):
-        @check_auth('superuser')
+        @check_auth(auth_level)
         def wrapper(request, *callback_args, **callback_kwargs):
-            try:
+            try: 
                 sessionid = request.COOKIES.get('sessionid')
                 session = Session.objects.get(session_key=sessionid)
-                client_id = session.get_decoded().get('client_id')
-                if yes_or_no == 'yes':
-                    if not Game.objects(client_id = client_id):
-                        url = reverse('GameAssistant:start_profile', args=['1'])
-                        return HttpResponseRedirect(url)
-                    else:
-                        return func(request, *callback_args, **callback_kwargs)
-                elif yes_or_no == 'no':
-                    if Game.objects(client_id = client_id):
-                        url = reverse('GameAssistant:start_profile', args=['0'])
-                        return HttpResponseRedirect(url)
-                    else:
-                        return func(request, *callback_args, **callback_kwargs)
-                else:
-                    return HttpResponseBadRequest('Illegal argument in utils.game_ongoing!')
+                if auth_level == 'superuser':
+                    client_id = session.get_decoded().get('client_id')
+                    if yes_or_no == 'yes':
+                        if not Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:start_profile', args=['1'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            return func(request, *callback_args, **callback_kwargs)
+                    elif yes_or_no == 'no':
+                        if Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:start_profile', args=['0'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            return func(request, *callback_args, **callback_kwargs)
+
+                if auth_level == 'subuser':
+                    subclient_id = session.get_decoded().get('subclient_id')
+                    client_id = subclient_id.split('@',1)[-1]
+                    if yes_or_no == 'yes':
+                        if not Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:home_index', args=['3'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            return func(request, *callback_args, **callback_kwargs)
+                    elif yes_or_no == 'no':
+                        if Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:home_index', args=['2'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            return func(request, *callback_args, **callback_kwargs)
+
+                return HttpResponseBadRequest('Illegal argument in utils.game_ongoing!')
+
             except Exception as e:
                 return HttpResponseBadRequest('Unknown error while running utils.game_ongoing! Details: {0}'.format(e))
         return wrapper

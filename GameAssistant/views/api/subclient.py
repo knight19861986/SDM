@@ -45,8 +45,12 @@ def create(request):
         client.subclients.append(subclient)
         client.save()
 
+        new_client_id = subclient_id.split('@',1)[-1]
+
         print(subclient_name)
         print(subclient_id)
+        print(subclient_id.split('@',1)[-2])
+        print(new_client_id)
 
         response = '<script>alert(\'Succeed to send!\')</script>'
         return HttpResponse(response)

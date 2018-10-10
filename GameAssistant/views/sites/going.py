@@ -6,8 +6,7 @@ from GameAssistant.models.games import Game
 from GameAssistant.libs.utils import check_auth, game_ongoing
 from django.shortcuts import render
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@game_ongoing('yes', 'superuser')
 def room(request):
     return render(request, "room_superuser.html")
 

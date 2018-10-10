@@ -43,8 +43,7 @@ def exit(request):
     return HttpResponseBadRequest('Unknown error while running start.exit!')
 
 
-@check_auth('superuser')
-@game_ongoing('no')
+@game_ongoing('no', 'superuser')
 def new(request, errorcode):
     messages = {
         '0': "Game code has already existed!",
