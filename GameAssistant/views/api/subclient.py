@@ -31,7 +31,7 @@ def create(request):
         client_id = game.client_id
 
         if not Client.objects(client_id = client_id):
-            url = reverse('GameAssistant:home_index', args=[2])
+            url = reverse('GameAssistant:home_index', args=[4])
             return HttpResponseRedirect(url)
 
         #if no cookie of subclient

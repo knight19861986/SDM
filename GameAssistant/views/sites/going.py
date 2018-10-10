@@ -9,7 +9,7 @@ from django.shortcuts import render
 @check_auth('superuser')
 @game_ongoing('yes')
 def room(request):
-    return render(request, "room.html")
+    return render(request, "room_superuser.html")
 
 
 #@check_auth('subuser')

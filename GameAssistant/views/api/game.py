@@ -97,6 +97,8 @@ def get_game(request):
 @game_ongoing('yes')
 def delete(request):
     try:
+        if request.method != 'POST':
+            return HttpResponseBadRequest('Only POST are allowed!')
         sessionid = request.COOKIES.get('sessionid')
         session = Session.objects.get(session_key=sessionid)
         client_id = session.get_decoded().get('client_id')
