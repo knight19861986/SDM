@@ -18,6 +18,32 @@ def check_auth(auth_level):
                     else:
                         return HttpResponseBadRequest('COOKIES expired! Please sign in again!')
 
+                elif auth_level == 'subuser':
+                    if 'sessionid' in request.COOKIES:
+                        sessionid = request.COOKIES.get('sessionid')
+                        session = Session.objects.get(session_key=sessionid)
+                        if session and session.get_decoded().get('client_id'):
+                            url = reverse('GameAssistant:start_profile', args=[''])
+                            return HttpResponseRedirect(url)
+                        elif session and session.get_decoded().get('subclient_id'):
+                            return func(request, *callback_args, **callback_kwargs)
+
+                        else:
+                            return HttpResponseBadRequest('Session of subuser not existed!')
+                    else:
+                        return HttpResponseBadRequest('COOKIES expired!')
+
+                elif auth_level == 'user':
+                    if 'sessionid' in request.COOKIES:
+                        sessionid = request.COOKIES.get('sessionid')
+                        session = Session.objects.get(session_key=sessionid)
+                        if session:
+                            if session.get_decoded().get('client_id') or session.get_decoded().get('subclient_id'):
+                                return func(request, *callback_args, **callback_kwargs)
+                        return HttpResponseBadRequest('Session not existed!')
+                    else:
+                        return HttpResponseBadRequest('COOKIES expired!')
+
                 elif auth_level == 'guest':
                     if 'sessionid' in request.COOKIES:
                         sessionid = request.COOKIES.get('sessionid')
