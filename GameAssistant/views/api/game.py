@@ -101,8 +101,9 @@ def delete(request):
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             game.delete()
-        url = reverse('GameAssistant:start_profile', args=[''])
-        return HttpResponseRedirect(url)
+            url = reverse('GameAssistant:start_profile', args=[''])
+            return HttpResponseRedirect(url)
+        return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running game.delete! Details: {0}'.format(e))
 
