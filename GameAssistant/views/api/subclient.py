@@ -34,9 +34,10 @@ def enter(request):
             url = reverse('GameAssistant:home_index', args=[4])
             return HttpResponseRedirect(url)
 
-        #if no cookie of subclient
+        
         client = Client.objects(client_id = client_id).first()
-        subclient_id = 'friend' + str(no_of_subuser) + '@' +self.client_id
+        subclient_id = client.get_next_subclient_id()
+        #if no cookie of subclient
         if client.add_subclient():
             request.session.set_expiry(60*60*24) 
             request.session['subclient_id'] = subclient_id
@@ -47,5 +48,5 @@ def enter(request):
 
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running subclient.create! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
