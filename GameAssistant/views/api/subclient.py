@@ -11,7 +11,7 @@ from GameAssistant.libs.utils import check_auth, game_ongoing
 from django.shortcuts import render
 
 @check_auth('guest')
-def create(request):
+def enter(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
 
@@ -36,21 +36,11 @@ def create(request):
 
         #if no cookie of subclient
         client = Client.objects(client_id = client_id).first()
+        subclient_id = 'friend' + str(no_of_subuser) + '@' +self.client_id
+        if client.add_subclient():
+            request.session.set_expiry(60*60*24) 
+            request.session['subclient_id'] = subclient_id
 
-        no_of_subuser = len(client.subclients) + 1
-
-        subclient_name = 'Friend No.' + str(no_of_subuser)
-        subclient_id = 'friend' + str(no_of_subuser) + '@' +client_id
-        subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
-        client.subclients.append(subclient)
-        client.save()
-
-        new_client_id = subclient_id.split('@',1)[-1]
-
-        print(subclient_name)
-        print(subclient_id)
-        print(subclient_id.split('@',1)[-2])
-        print(new_client_id)
 
         response = '<script>alert(\'Succeed to send!\')</script>'
         return HttpResponse(response)

@@ -22,5 +22,21 @@ class Client(Document):
         ]
     }
 
+
+    def add_subclient(self):
+        no_of_subuser = len(self.subclients) + 1
+        subclient_name = 'Friend No.' + str(no_of_subuser)
+        subclient_id = 'friend' + str(no_of_subuser) + '@' +self.client_id
+        subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
+        self.subclients.append(subclient)
+        try: 
+            self.save()
+            new_client_id = subclient_id.split('@',1)[-1]
+            print(new_client_id)
+            return True
+        except:
+            return False
+
+
     def __unicode__(self):
         return self.client_id

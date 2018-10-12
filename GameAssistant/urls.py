@@ -13,8 +13,8 @@ urlpatterns = [
     url(r'^sign-in/((?P<errorcode>\d)|)$', home.sign_in, name='sign_in'),
 
     ################ Start #################
-    url(r'^enter/$', start.enter, name='start_enter'),
-    url(r'^exit/$', start.exit, name='start_exit'),
+    url(r'^enter/$', start.enter, name='start_enter'), # remove later
+    url(r'^exit/$', start.exit, name='start_exit'), # remove later
     url(r'^new/((?P<errorcode>\d)|)$', start.new, name='start_new'),
     url(r'^profile/((?P<errorcode>\d)|)$', start.profile, name='start_profile'),
 
@@ -24,10 +24,12 @@ urlpatterns = [
 
 	############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),
+    url(r'^client/enter/$', client.enter, name='client_enter'),
+    url(r'^client/exit/$', client.exit, name='client_exit'),
     url(r'^client/ajax_profile/$', client.get_client, name='client_profile'),
 
     ############### SubClient ##############
-    url(r'^subclient/create/$', subclient.create, name='subclient_create'),
+    url(r'^subclient/enter/$', subclient.enter, name='subclient_create'),
 
 
     ############### Game ###################
