@@ -13,7 +13,7 @@ class Client(Document):
     time_created = DateTimeField(default=datetime.now)
     time_modified = DateTimeField(default=datetime.now)
 
-    subclients = ListField(EmbeddedDocumentField(SubClient))
+    subclients = EmbeddedDocumentListField(SubClient)
 
     meta = {
         'indexes': [
@@ -42,6 +42,15 @@ class Client(Document):
         subclient_id = kwargs['subclient_id'] if 'subclient_id' in kwargs else self.generate_subclient_id()
         subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
         self.subclients.append(subclient)
+        try: 
+            self.save()
+            return True
+        except:
+            return False
+
+    def clear_subclients(self):
+        self.subclients.delete()
+        self._subuser_counter = 0
         try: 
             self.save()
             return True

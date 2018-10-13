@@ -42,6 +42,7 @@ def enter(request):
             request.session.set_expiry(60*60*24) 
             request.session['subclient_id'] = subclient_id
             print(subclient_id)
+            #print(client.clear_subclients())
 
 
         response = '<script>alert(\'Succeed to send!\')</script>'
