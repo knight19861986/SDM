@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 from datetime import datetime
 from mongoengine import *
 from GameAssistant.models.subclients import SubClient
@@ -8,6 +9,7 @@ class Client(Document):
     client_name = StringField(max_length = 200)
     client_email = EmailField(default=None)
     pin = StringField(max_length = 200)
+    _subuser_counter = IntField(default = 0)
     time_created = DateTimeField(default=datetime.now)
     time_modified = DateTimeField(default=datetime.now)
 
@@ -22,25 +24,26 @@ class Client(Document):
         ]
     }
 
-    def get_next_subclient_id(self):
+    def generate_subclient_id(self):
         no_of_subuser = len(self.subclients) + 1
-        return 'friend' + str(no_of_subuser) + '@' +self.client_id
+        timestamp = time.time()
+        return 'friend' + str(int(timestamp*1000000)) + '@' +self.client_id
 
 
-    def get_next_subclient_name(self):
-        no_of_subuser = len(self.subclients) + 1
-        return 'Friend No.' + str(no_of_subuser)
+    def _get_next_subclient_name(self):
+        self._subuser_counter += 1
+        if self._subuser_counter > 1000:
+            self._subuser_counter = 1
+        return 'Friend No.' + str(self._subuser_counter)
 
 
-    def add_subclient(self):
-        subclient_name = self.get_next_subclient_name()
-        subclient_id = self.get_next_subclient_id()
+    def add_subclient(self, **kwargs):
+        subclient_name = self._get_next_subclient_name()
+        subclient_id = kwargs['subclient_id'] if 'subclient_id' in kwargs else self.generate_subclient_id()
         subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
         self.subclients.append(subclient)
         try: 
             self.save()
-            # new_client_id = subclient_id.split('@',1)[-1]
-            # print(new_client_id)
             return True
         except:
             return False

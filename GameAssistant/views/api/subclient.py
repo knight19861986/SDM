@@ -36,11 +36,12 @@ def enter(request):
 
         
         client = Client.objects(client_id = client_id).first()
-        subclient_id = client.get_next_subclient_id()
+        subclient_id = client.generate_subclient_id()
         #if no cookie of subclient
-        if client.add_subclient():
+        if client.add_subclient(subclient_id = subclient_id):
             request.session.set_expiry(60*60*24) 
             request.session['subclient_id'] = subclient_id
+            print(subclient_id)
 
 
         response = '<script>alert(\'Succeed to send!\')</script>'
