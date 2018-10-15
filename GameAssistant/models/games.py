@@ -10,7 +10,7 @@ class Game(Document):
     num_of_players = IntField(default = 4, required=True)
     time_created = DateTimeField(default = datetime.now)
 
-    game_seats = ListField(EmbeddedDocumentField(Seat))
+    game_seats = EmbeddedDocumentListField(Seat)
 
     meta = {
         'indexes': [

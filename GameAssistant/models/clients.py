@@ -48,6 +48,13 @@ class Client(Document):
         except:
             return False
 
+    def has_subclient(self, subclient_id):
+        subclient = self.subclients.filter(subclient_id = subclient_id)
+        if subclient:
+            return True
+        else:
+            return False
+
     def clear_subclients(self):
         self.subclients.delete()
         self._subuser_counter = 0
