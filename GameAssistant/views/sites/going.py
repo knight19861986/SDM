@@ -11,7 +11,7 @@ def room(request):
     return render(request, "room_superuser.html")
 
 
-@check_auth('subuser')
+@game_ongoing('yes', 'subuser')
 def room_guest(request):
     return render(request, "room_subuser.html")
 
