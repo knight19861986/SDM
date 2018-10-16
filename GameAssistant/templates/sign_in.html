@@ -8,7 +8,7 @@
 <div>
 <H2 ALIGN="left">To sign-in</H2>
 </div>
-<form name="form_sign_in" method="post" action="{% url 'GameAssistant:start_enter' %}"  onSubmit="return userFieldsCheck()">{% csrf_token %}
+<form name="form_sign_in" method="post" action="{% url 'GameAssistant:client_enter' %}"  onSubmit="return userFieldsCheck()">{% csrf_token %}
     <table border="0">
         <tbody>
             <tr>

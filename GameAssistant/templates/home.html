@@ -11,7 +11,7 @@
     <a href="sign-in/">Already been a superuser</a>
 </div>
 <div>
-    <form name="form_join_game" method="post" action="{% url 'GameAssistant:subclient_create'%}" onSubmit="return fieldsCheck()">{% csrf_token %}
+    <form name="form_join_game" method="post" action="{% url 'GameAssistant:subclient_enter'%}" onSubmit="return fieldsCheck()">{% csrf_token %}
         <table border="0">
             <tbody>
                 <tr>
