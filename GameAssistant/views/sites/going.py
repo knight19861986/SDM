@@ -11,22 +11,10 @@ def room(request):
     return render(request, "room_superuser.html")
 
 
-#@check_auth('subuser')
+@check_auth('subuser')
 def room_guest(request):
-    if 'sessionid' in request.COOKIES:
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        if session:
-            if session.get_decoded().get('client_id'):
-                return render(request, "room_superuser.html")
-            elif session.get_decoded().get('subclient_id'):
-                return render(request, "room_subuser.html")
+    return render(request, "room_subuser.html")
 
-        return HttpResponseBadRequest('Valid session not existed! Please sign in or join again!')
-
-    else:
-        url = reverse('GameAssistant:home_index', args=[''])
-        return HttpResponseRedirect(url)
 
 
 

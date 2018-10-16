@@ -43,26 +43,20 @@ def enter(request):
                 subclient_id = session.get_decoded().get('subclient_id')
                 if client.has_subclient(subclient_id):
 
-                    response = '<script>alert(\'Ready to recover game!\')</script>'
-                    return HttpResponse(response)
+                    url = reverse('GameAssistant:going_room_guest')
+                    return HttpResponseRedirect(url)
 
-
-        #if no cookie of subclient
+        #if no cookie of subclient:
         subclient_id = client.generate_subclient_id()
         if client.add_subclient(subclient_id = subclient_id):
             request.session.set_expiry(60*60*24) 
             request.session['subclient_id'] = subclient_id
-            #print(subclient_id)
-            #print(client.clear_subclients())
 
-            response = '<script>alert(\'Ready to join game!\')</script>'
-            return HttpResponse(response)
+            url = reverse('GameAssistant:going_room_guest')
+            return HttpResponseRedirect(url)
+
         else:
             return HttpResponseBadRequest('Unknown error happened! Failed to generate subuser!')
-
-        response = '<script>alert(\'Nothing happen!\')</script>'
-        return HttpResponse(response)
-
 
 
     except Exception as e:

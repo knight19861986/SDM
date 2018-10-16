@@ -122,4 +122,21 @@ def decorator_example(args):
     return _decorator_example
 
 
+@check_auth('user')
+def get_client_id_from_session(request):
+    try:
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        if not client_id:
+            subclient_id = session.get_decoded().get('subclient_id')
+            client_id = subclient_id.split('@')[-1]
+            if not client_id: 
+                return HttpResponseBadRequest('Unknown error happened! Might be due to illigal subclient_id!')
+        return client_id
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running utils.get_client_id_from_session! Details: {0}'.format(e))
+
+
 
