@@ -1,4 +1,4 @@
-from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
+from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest,HttpResponseForbidden
 from django.urls import reverse
 from GameAssistant.models.games import Game
 from django.contrib.sessions.models import Session
@@ -14,9 +14,9 @@ def check_auth(auth_level):
                         if session and session.get_decoded().get('client_id'):
                             return func(request, *callback_args, **callback_kwargs)
                         else:
-                            return HttpResponseBadRequest('Session of superuser not existed! Please sign in again!')
+                            return HttpResponseForbidden('Session of superuser not existed! Please sign in again!')
                     else:
-                        return HttpResponseBadRequest('COOKIES expired! Please sign in again!')
+                        return HttpResponseForbidden('COOKIES expired! Please sign in again!')
 
                 elif auth_level == 'subuser':
                     if 'sessionid' in request.COOKIES:
@@ -29,9 +29,9 @@ def check_auth(auth_level):
                             return func(request, *callback_args, **callback_kwargs)
 
                         else:
-                            return HttpResponseBadRequest('Session of subuser not existed!')
+                            return HttpResponseForbidden('Session of subuser not existed!')
                     else:
-                        return HttpResponseBadRequest('COOKIES expired!')
+                        return HttpResponseForbidden('COOKIES expired!')
 
                 elif auth_level == 'user':
                     if 'sessionid' in request.COOKIES:
@@ -40,9 +40,9 @@ def check_auth(auth_level):
                         if session:
                             if session.get_decoded().get('client_id') or session.get_decoded().get('subclient_id'):
                                 return func(request, *callback_args, **callback_kwargs)
-                        return HttpResponseBadRequest('Session not existed!')
+                        return HttpResponseForbidden('Session not existed!')
                     else:
-                        return HttpResponseBadRequest('COOKIES expired!')
+                        return HttpResponseForbidden('COOKIES expired!')
 
                 elif auth_level == 'guest':
                     if 'sessionid' in request.COOKIES:
@@ -115,7 +115,7 @@ def decorator_example(args):
                 if not args:
                     return func(request, *callback_args, **callback_kwargs)
                 else:
-                    return HttpResponseBadRequest("Bad request!")
+                    return HttpResponseForbidden("Forbidden!")
             except Exception as e:
                 return HttpResponseBadRequest('Unknown error while running utils.decorator_example! Details: {0}'.format(e))
         return wrapper
@@ -132,7 +132,7 @@ def get_client_id_from_session(request):
             subclient_id = session.get_decoded().get('subclient_id')
             client_id = subclient_id.split('@')[-1]
             if not client_id: 
-                return HttpResponseBadRequest('Unknown error happened! Might be due to illigal subclient_id!')
+                return HttpResponseBadRequest('Unknown error happened! Might be due to expired COOKIES or illegal subclient_id!')
         return client_id
 
     except Exception as e:
