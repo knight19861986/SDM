@@ -5,7 +5,7 @@ from GameAssistant.views.api import client, subclient, game
 app_name =  "GameAssistant"
 urlpatterns = [
 
-	################ Home ##################
+    ################ Home ##################
     url(r'^((?P<errorcode>\d)|)$', home.index, name='home_index'),
     # url(r'^tab/$', home.tab, name='tab'), # Remove later
     url(r'^sign-up/((?P<errorcode>\d)|)$', home.sign_up, name='sign_up'),
@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^room/$', going.room, name='going_room'),
     url(r'^room-guest/$', going.room_guest, name='going_room_guest'),
 
-	############### Client #################
+    ############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),
     url(r'^client/enter/$', client.enter, name='client_enter'),
     url(r'^client/exit/$', client.exit, name='client_exit'),
