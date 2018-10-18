@@ -62,3 +62,30 @@ def enter(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
+
+@game_ongoing('yes', 'subuser')
+def sit(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+
+        return HttpResponseBadRequest('View of subclient.sit() is on the way!')
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
+
+@game_ongoing('yes', 'subuser')
+def unsit(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+
+        return HttpResponseBadRequest('View of subclient.sit() is on the way!')
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
+
+
+
+
+
+
+

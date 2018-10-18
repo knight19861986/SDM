@@ -21,5 +21,15 @@ class Game(Document):
         ]
     }
 
+
+    def update_seat(self, **kwargs):
+        seat = self.game_seats.filter(seat_number = kwargs['seat_number'])
+
+        try: 
+            self.save()
+            return True
+        except:
+            return False
+
     def __unicode__(self):
         return self.room_number

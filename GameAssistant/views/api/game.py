@@ -58,7 +58,7 @@ def get_seats(request):
             for seat in game.game_seats:
                 ret.append({
                     'SeatNumber': seat.seat_number,
-                    'NickName': seat.subuser_name if seat.subuser_name else 'Waiting',
+                    'NickName': seat.nickname if seat.nickname else 'Waiting',
 
                     })
 
