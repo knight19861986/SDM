@@ -5,11 +5,11 @@
 These instructions assume you use Python 3.
 
 Step 1: Intallation and configuration of python
-1. Install Python (google it and you will find instructions).
+1. Install Python (Please find instructions from google).
 2. Setup virtualenv and install dependencies:
   ```
-  python3 -m venv venv_thesis  # The executable might also be called just `python`.
-  source venv_thesis/bin/activate
+  python3 -m venv <name of venv>  # The executable might also be called just `python`
+  source <name of venv>/bin/activate
   pip install -r requirements.txt
   ```
 Step 2: Intallation and initiation of MongoDB
@@ -39,8 +39,8 @@ Step 1: Intallation and configuration of python
   * `C:\Users\User\AppData\Local\Programs\Python\Python36-32\Scripts` (for `pip`)
 7. Open PowerShell.
 8. Navigate to the task directory (the directory this file is in).
-9. `python -m venv venv_thesis`
-10. `.\venv_thesis\Scripts\activate`
+9. `python -m venv <name of venv>`
+10. `.\<name of venv>\Scripts\activate`
 11. `pip install -r requirements.txt`
 
 Step 2: Intallation and initiation of MongoDB
