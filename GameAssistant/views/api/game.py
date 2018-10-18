@@ -57,8 +57,10 @@ def get_seats(request):
             ret = []
             for seat in game.game_seats:
                 ret.append({
+                    'GameCode': game.game_code,
                     'SeatNumber': seat.seat_number,
                     'NickName': seat.nickname if seat.nickname else 'Waiting',
+                    'SeatState': seat.seat_state if seat.seat_state else 0
 
                     })
 

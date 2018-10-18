@@ -69,7 +69,7 @@ def sit(request):
         return HttpResponseBadRequest('Only POST are allowed!')
     try:
 
-        return HttpResponseBadRequest('View of subclient.sit() is on the way!')
+        return HttpResponse('View of subclient.sit() is on the way!')
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
 
@@ -79,7 +79,7 @@ def unsit(request):
         return HttpResponseBadRequest('Only POST are allowed!')
     try:
 
-        return HttpResponseBadRequest('View of subclient.sit() is on the way!')
+        return HttpResponse('View of subclient.unsit() is on the way!')
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
 
