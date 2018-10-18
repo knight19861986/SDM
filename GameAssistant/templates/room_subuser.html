@@ -45,7 +45,7 @@
                     if (value.SeatState == 0){
                         html_to_append +=
                         "   <td align='right'> " +
-                        "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" " +'{% csrf_token %}' +
+                        "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
                         "           <input type='submit' value='Sit'/> " +
                         "           <input type='hidden' name='game_code' value=" +value.GameCode + "/> " +
                         "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + "/> " +                        
@@ -55,7 +55,7 @@
                         if (value.SeatState == 2){
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" " +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" >" +'{% csrf_token %}' +
                             "           <input type='submit' value='Cancel'/> " +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + "/> " +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + "/> " +
