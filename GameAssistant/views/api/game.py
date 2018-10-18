@@ -8,10 +8,9 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
-from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session
 
-@check_auth('superuser')
-@game_ongoing('no')
+@game_ongoing('no', 'superuser')
 def create(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -28,9 +27,7 @@ def create(request):
 
         num_of_players = request.POST.get('num_of_players')
 
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        client_id = session.get_decoded().get('client_id')
+        client_id = get_client_id_from_session(request)
 
         room_number = 0
         while True:
@@ -51,20 +48,17 @@ def create(request):
         return HttpResponseBadRequest('Unknown error while running game.create! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@check_auth('user')
 def get_seats(request):
     try:
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        client_id = session.get_decoded().get('client_id')
+        client_id = get_client_id_from_session(request)
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             ret = []
             for seat in game.game_seats:
                 ret.append({
                     'SeatNumber': seat.seat_number,
-                    'NickName': seat.subuser_name if seat.subuser_name else 'Waiting',
+                    'NickName': seat.nickname if seat.nickname else 'Waiting',
 
                     })
 
@@ -74,13 +68,10 @@ def get_seats(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@check_auth('user')
 def get_game(request):
     try:
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        client_id = session.get_decoded().get('client_id')
+        client_id = get_client_id_from_session(request)
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             ret = {}
@@ -93,18 +84,21 @@ def get_game(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@check_auth('superuser')
-@game_ongoing('yes')
+@game_ongoing('yes', 'superuser')
 def delete(request):
     try:
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        client_id = session.get_decoded().get('client_id')
+        if request.method != 'POST':
+            return HttpResponseBadRequest('Only POST are allowed!')
+        client_id = get_client_id_from_session(request)
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             game.delete()
-        url = reverse('GameAssistant:start_profile', args=[''])
-        return HttpResponseRedirect(url)
+            url = reverse('GameAssistant:start_profile', args=[''])
+            #To clean the subclients temporarily:
+            client = Client.objects(client_id = client_id).first()
+            client.clear_subclients()
+            return HttpResponseRedirect(url)
+        return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running game.delete! Details: {0}'.format(e))
 

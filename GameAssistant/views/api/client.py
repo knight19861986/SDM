@@ -6,6 +6,7 @@ import re
 #from mongoengine import *
 from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
+from GameAssistant.models.subclients import SubClient
 from GameAssistant.libs.utils import check_auth
 
 @check_auth('guest')
@@ -40,6 +41,42 @@ def create(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.create! Details: {0}'.format(e))
+
+@check_auth('guest')
+def enter(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed')
+    try:
+        client_id = request.POST.get('username')
+        pin = request.POST.get('password')
+        client = Client.objects(client_id= client_id)
+
+        if not client:
+            url = reverse('GameAssistant:sign_in', args=[0])
+            return HttpResponseRedirect(url)
+
+        elif not pin == client.get().pin:
+            url = reverse('GameAssistant:sign_in', args=[1])
+            return HttpResponseRedirect(url)
+
+        else:
+            request.session.set_expiry(60*60*24) 
+            request.session['client_id'] = client_id
+            url = reverse('GameAssistant:start_profile', args=[''])
+            return HttpResponseRedirect(url)
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running start.enter! Details: {0}'.format(e))
+
+@check_auth('superuser')
+def exit(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed')
+    if 'client_id' in request.session:
+        request.session.flush()
+        url = reverse('GameAssistant:sign_in', args=[''])
+        return HttpResponseRedirect(url)
+
+    return HttpResponseBadRequest('Unknown error while running start.exit!')
 
 @check_auth('superuser')
 def get_client(request):

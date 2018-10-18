@@ -4,8 +4,21 @@ from GameAssistant.libs.utils import check_auth
 from django.shortcuts import render
 
 @check_auth('guest')
-def index(request):
-    return render(request, "home.html")
+def index(request, errorcode):
+    messages = {
+        '0': "Illegal game code!",
+        '1': "Game code is not existed!",
+        '2': "You have already joined a game!\nPlease quit the game before you join a new one!",
+        '3': "You don't have an on-going game!\nPlease join a new one!",
+        '4': "Unexpected error happen!\nThe host of the game is missing! Please try with another code!",
+        '5': "Unexpected error happen!\nThe game is already closed. Please try with another code!"
+    }
+    if errorcode in messages:
+        msg = messages.get(errorcode)
+    else:
+        msg =''
+
+    return render(request, "home.html", {'error_msg': msg})
 
 ############### Remove later #################
 def tab(request):

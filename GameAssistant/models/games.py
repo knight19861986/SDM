@@ -10,7 +10,7 @@ class Game(Document):
     num_of_players = IntField(default = 4, required=True)
     time_created = DateTimeField(default = datetime.now)
 
-    game_seats = ListField(EmbeddedDocumentField(Seat))
+    game_seats = EmbeddedDocumentListField(Seat)
 
     meta = {
         'indexes': [
@@ -20,6 +20,16 @@ class Game(Document):
 
         ]
     }
+
+
+    def update_seat(self, **kwargs):
+        seat = self.game_seats.filter(seat_number = kwargs['seat_number'])
+
+        try: 
+            self.save()
+            return True
+        except:
+            return False
 
     def __unicode__(self):
         return self.room_number
