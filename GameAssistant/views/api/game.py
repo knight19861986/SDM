@@ -77,9 +77,9 @@ def get_game(request):
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             ret = {}
-            ret['Room number'] = game.room_number
-            ret['Game code'] = game.game_code
-            ret['Number of players'] = game.num_of_players
+            ret['RoomNumber'] = game.room_number
+            ret['GameCode'] = game.game_code
+            ret['NumberOfPlayers'] = game.num_of_players
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:

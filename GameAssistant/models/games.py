@@ -24,6 +24,7 @@ class Game(Document):
 
     def update_seat(self, **kwargs):
         seat = self.game_seats.filter(seat_number = kwargs['seat_number'])
+        print(seat.nickname)
 
         try: 
             self.save()

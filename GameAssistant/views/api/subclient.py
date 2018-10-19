@@ -68,6 +68,7 @@ def sit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
     try:
+        game_code = request.POST.get('gamecode')
 
         return HttpResponse('View of subclient.sit() is on the way!')
     except Exception as e:
