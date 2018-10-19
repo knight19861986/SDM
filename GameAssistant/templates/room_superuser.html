@@ -16,7 +16,7 @@
 
 <br>
 <form name="button_end" method="post" action="{% url 'GameAssistant:game_delete' %}" onSubmit="return endConfirm()">{% csrf_token %}
-    <input type="submit" value="EndGame"/>       
+    <input type="submit" value="EndGame">
 </form>
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -41,7 +41,7 @@
                         "   </td>" + 
                         "   <td align='right'> " +
                         "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:game_delete' %}\" onSubmit='return endConfirm()'>" +'{% csrf_token %}' +
-                        "           <input type='submit' value='Sit'/> " +
+                        "           <input type='submit' value='Sit' > " +
                         "       </form>" +
                         "   </td>" +
                         "</tr>"

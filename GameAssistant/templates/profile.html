@@ -16,12 +16,12 @@
         <tr>
             <td>
                 <form name="button_intiate_game" method="post" action="{% url 'GameAssistant:start_new' '' %}">{% csrf_token %}
-                    <input type="submit" value="New Game"/>       
+                    <input type="submit" value="New Game">
                 </form>
             </td>
             <td>
                 <form name="button_intiate_game" method="post" action="{% url 'GameAssistant:going_room' %}">{% csrf_token %}
-                    <input type="submit" value="Recover Game"/>       
+                    <input type="submit" value="Recover Game">
                 </form>
             </td>
         </tr>
@@ -29,7 +29,7 @@
 </table>
 <br>
 <form name="button_logout" method="post" action="{% url 'GameAssistant:client_exit' %}">{% csrf_token %}
-    <input type="submit" value="Logout"/>       
+    <input type="submit" value="Logout">
 </form>
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -43,6 +43,6 @@
             })
         })
     });
-</script> 
+</script>
 
 {% endblock %}

@@ -16,7 +16,7 @@
 
 <br>
 <form name="button_leave" action="{% url 'GameAssistant:home_index' '' %}" onSubmit="return leaveConfirm()">
-    <input type="submit" value="LeaveGame"/>       
+    <input type="submit" value="LeaveGame"/>
 </form>   
 
 
@@ -45,8 +45,8 @@
                         html_to_append +=
                         "   <td align='right'> " +
                         "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
-                        "           <input type='hidden' name='game_code' value=" +value.GameCode + "/> " +
-                        "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + "/> " +
+                        "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                        "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
                         "           <input type='submit' value='Sit'/> " +
                         "       </form>" +
                         "   </td>";
@@ -55,8 +55,8 @@
                             html_to_append +=
                             "   <td align='right'> " +
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" >" +'{% csrf_token %}' +
-                            "           <input type='hidden' name='game_code' value=" +value.GameCode + "/> " +
-                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + "/> " +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
                             "           <input type='submit' value='Cancel'/> " +
                             "       </form>" +
                             "   </td>";

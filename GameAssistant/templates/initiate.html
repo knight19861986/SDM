@@ -35,8 +35,8 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="Start" />  
-                    <input type="reset" value="Reset"/>
+                    <input type="submit" value="Start">
+                    <input type="reset" value="Reset">
                 </td>
             </tr>
         </tbody>
@@ -44,11 +44,11 @@
 </form>
 <br>
 <form name="button_profile" method="post" action="{% url 'GameAssistant:start_profile' '' %}">{% csrf_token %}
-    <input type="submit" value="Profile"/>       
+    <input type="submit" value="Profile">
 </form>
 <br>
 <form name="button_logout" method="post" action="{% url 'GameAssistant:client_exit' %}">{% csrf_token %}
-    <input type="submit" value="Logout"/>       
+    <input type="submit" value="Logout">
 </form>
 
 <script language="javascript">

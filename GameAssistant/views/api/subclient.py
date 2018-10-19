@@ -7,7 +7,7 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
-from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session
 from django.shortcuts import render
 
 @check_auth('guest')
@@ -68,9 +68,16 @@ def sit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
     try:
-        game_code = request.POST.get('gamecode')
+        # game_code = request.POST.get('game_code')
+        # print(game_code)
+        # seat_number = request.POST.get('seat_number')
+        # print(seat_number)
+        # game = Game.objects(game_code = game_code).first()
+        # game.update_seat(seat_number=seat_number)
 
         return HttpResponse('View of subclient.sit() is on the way!')
+
+
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
 
@@ -83,10 +90,5 @@ def unsit(request):
         return HttpResponse('View of subclient.unsit() is on the way!')
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
-
-
-
-
-
 
 
