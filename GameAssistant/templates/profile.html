@@ -35,12 +35,10 @@
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
     $(document).ready(function(){
-        $('#allObjects').ready(function(){
-            $.getJSON("{% url 'GameAssistant:client_profile' %}", function(ret){
-                $.each(ret, function(key,value){
-                    $('#my_profile').append('<tr><td>'+ key +'</td><td>' + value +'</td></tr>');
-                });
-            })
+        $.getJSON("{% url 'GameAssistant:client_profile' %}", function(ret){
+            $.each(ret, function(key,value){
+                $('#my_profile').append('<tr><td>'+ key +'</td><td>' + value +'</td></tr>');
+            });
         })
     });
 </script>

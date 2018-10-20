@@ -27,50 +27,49 @@
     }
 
     $(document).ready(function(){
-        $('#allObjects').ready(function(){
-            $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-                $('#headline').append(ret['RoomNumber']);
-                $('#gamecode').append(ret['GameCode']);
-            });
-            $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
-                $.each(ret, function(key,value){
-                    var html_to_append = 
-                        "<tr>=\n" + 
-                        "   <td align='right'> Seat " + value.SeatNumber + ": " + 
-                        "   </td>" +
-                        "   <td>" + value.NickName + 
-                        "   </td>";
-                    
-                    if (value.SeatState == 0){
-                        html_to_append +=
-                        "   <td align='right'> " +
-                        "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
-                        "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
-                        "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                        "           <input type='submit' value='Sit'/> " +
-                        "       </form>" +
-                        "   </td>";
-                    } else 
-                        if (value.SeatState == 2){
-                            html_to_append +=
-                            "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" >" +'{% csrf_token %}' +
-                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
-                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Cancel'/> " +
-                            "       </form>" +
-                            "   </td>";
-                        }
-                    
-                    html_to_append += "</tr>";
-                    
-                    $('#seatlistbody').append(html_to_append);
+        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+            $('#headline').append(ret['RoomNumber']);
+            $('#gamecode').append(ret['GameCode']);
+        });
+        $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
+            $.each(ret, function(key,value){
+                var html_to_append = 
+                    "<tr>=\n" + 
+                    "   <td align='right'> Seat " + value.SeatNumber + ": " + 
+                    "   </td>" +
+                    "   <td>" + value.NickName + 
+                    "   </td>";
+                
+                if (value.SeatState == 0){
+                    html_to_append +=
+                    "   <td align='right'> " +
+                    "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
+                    "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                    "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                    "           <input type='submit' value='Sit'/> " +
+                    "       </form>" +
+                    "   </td>";
+                } 
+                // else 
+                //     if (value.SeatState == 2){
+                //         html_to_append +=
+                //         "   <td align='right'> " +
+                //         "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" >" +'{% csrf_token %}' +
+                //         "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                //         "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                //         "           <input type='submit' value='Cancel'/> " +
+                //         "       </form>" +
+                //         "   </td>";
+                //     }
+                
+                html_to_append += "</tr>";
+                
+                $('#seatlistbody').append(html_to_append);
 
-
-                });
 
             });
-        })
+
+        });
     });
 </script> 
 
