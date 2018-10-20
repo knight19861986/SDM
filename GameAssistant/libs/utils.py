@@ -130,7 +130,7 @@ def get_client_id_from_session(request):
         client_id = session.get_decoded().get('client_id')
         if not client_id:
             subclient_id = session.get_decoded().get('subclient_id')
-            client_id = subclient_id.split('@')[-1]
+            client_id = subclient_id.split('@',1)[-1]
             if not client_id: 
                 return HttpResponseBadRequest('Unknown error happened! Might be due to expired COOKIES or illegal subclient_id!')
         return client_id

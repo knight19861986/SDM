@@ -42,7 +42,19 @@ class Client(Document):
         subclient_id = kwargs['subclient_id'] if 'subclient_id' in kwargs else self.generate_subclient_id()
         subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
         self.subclients.append(subclient)
-        try: 
+        try:
+            self.save()
+            return True
+        except:
+            return False
+
+    def update_subclient(self, subclient_id, **kwargs):
+        subclient = self.subclients.filter(subclient_id = subclient_id).first()
+        subclient.time_modified = datetime.now
+        for key, value in kwargs.items():
+            if hasattr(subclient, key):
+                setattr(subclient, key, kwargs[key])
+        try:
             self.save()
             return True
         except:
@@ -58,7 +70,7 @@ class Client(Document):
     def clear_subclients(self):
         self.subclients.delete()
         self._subuser_counter = 0
-        try: 
+        try:
             self.save()
             return True
         except:
