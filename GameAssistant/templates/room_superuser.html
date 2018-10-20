@@ -24,14 +24,14 @@
     function endConfirm() {
         return window.confirm("Are you sure you want to end this game?");
     }
-
     $(document).ready(function(){
-        $('#allObjects').ready(function(){
-            $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-                $('#headline').append(ret['RoomNumber']);
-                $('#gamecode').append(ret['GameCode']);
-            });
+        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+            $('#headline').append(ret['RoomNumber']);
+            $('#gamecode').append(ret['GameCode']);
+        });
+        setInterval(function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
+                $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
                     $('#seatlistbody').append(
                         "<tr>=\n" + 
@@ -46,12 +46,9 @@
                         "   </td>" +
                         "</tr>"
                     );
-
-
                 });
-
             });
-        })
+        }, 1000);
     });
 </script> 
 
