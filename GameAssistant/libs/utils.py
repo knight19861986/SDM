@@ -121,7 +121,9 @@ def decorator_example(args):
         return wrapper
     return _decorator_example
 
-
+#Used for:
+#Get the client_id when being logged in as a super-user;
+#Get the client_id of its super user when working as a sub-user;
 @check_auth('user')
 def get_client_id_from_session(request):
     try:
@@ -138,5 +140,20 @@ def get_client_id_from_session(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running utils.get_client_id_from_session! Details: {0}'.format(e))
 
+#Used for:
+#Get the client_id when being logged in as a super-user;
+#Get the subclient_id when working as a sub-user;
+@check_auth('user')
+def get_user_id_from_session(request):
+    try:
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        if not client_id:
+            subclient_id = session.get_decoded().get('subclient_id')
+            return subclient_id
+        return client_id
 
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running utils.get_user_id_from_session! Details: {0}'.format(e))
 

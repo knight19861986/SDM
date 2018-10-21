@@ -64,40 +64,44 @@ def enter(request):
         return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
 
+def _subclient_is_seated(subclient, game):
+    for seat in game.game_seats:
+        if seat.user_id == subclient.subclient_id:
+            return True
+    return False
+
+
 @game_ongoing('yes', 'subuser')
 def sit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
-    try:
-        game_code = request.POST.get('game_code')
-        seat_number = request.POST.get('seat_number')
-        sessionid = request.COOKIES.get('sessionid')
-        session = Session.objects.get(session_key=sessionid)
-        subclient_id = session.get_decoded().get('subclient_id')
-        client_id = subclient_id.split('@',1)[-1]
+# try:
+    game_code = request.POST.get('game_code')
+    seat_number = request.POST.get('seat_number')
+    sessionid = request.COOKIES.get('sessionid')
+    session = Session.objects.get(session_key=sessionid)
+    subclient_id = session.get_decoded().get('subclient_id')
+    client_id = subclient_id.split('@',1)[-1]
 
-        client = Client.objects(client_id=client_id).first()
-        subclient = client.subclients.filter(subclient_id=subclient_id).first()
+    client = Client.objects(client_id=client_id).first()
+    subclient = client.subclients.filter(subclient_id=subclient_id).first()
+    game = Game.objects(game_code=game_code).first()
 
-        if not subclient.seated:
-            game = Game.objects(game_code=game_code).first()
-            seat = game.game_seats.filter(seat_number=seat_number).first()
-            current_seat_state = seat.seat_state
-            if current_seat_state == SeatState.empty.value:
-                if client.update_subclient(subclient_id=subclient_id, seated=True):
-                    if game.update_seat(seat_number=seat_number, subuser_id=subclient_id, nickname=subclient.subclient_name, seat_state=SeatState.subuser.value):
-                        url = reverse('GameAssistant:going_room_guest')
-                        return HttpResponseRedirect(url)
-                    else:
-                        return HttpResponseBadRequest("Unknown error happened! Failed to update game!")
-                else:
-                    return HttpResponseBadRequest("Unknown error happened! Failed to update client!")
+    if not _subclient_is_seated(subclient, game):
+        seat = game.game_seats.filter(seat_number=seat_number).first()
+        current_seat_state = seat.seat_state
+        if current_seat_state == SeatState.empty.value:
+            if game.update_seat(seat_number=seat_number, user_id=subclient_id, seat_state=SeatState.subuser.value):
+                url = reverse('GameAssistant:going_room_guest')
+                return HttpResponseRedirect(url)
+            else:
+                return HttpResponseBadRequest("Unknown error happened! Failed to update game!")
 
-        url = reverse('GameAssistant:going_room_guest')
-        return HttpResponseRedirect(url)
+    url = reverse('GameAssistant:going_room_guest')
+    return HttpResponseRedirect(url)
 
-    except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
+# except Exception as e:
+#     return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
 
 @game_ongoing('yes', 'subuser')
 def unsit(request):
@@ -113,26 +117,22 @@ def unsit(request):
 
         client = Client.objects(client_id=client_id).first()
         subclient = client.subclients.filter(subclient_id=subclient_id).first()
+        game = Game.objects(game_code = game_code).first()
 
-        if subclient.seated:
-            game = Game.objects(game_code = game_code).first()
+        if _subclient_is_seated(subclient, game):            
             seat = game.game_seats.filter(seat_number=seat_number).first()
             current_seat_state = seat.seat_state
-            current_seat_subuser_id = seat.subuser_id
+            current_seat_subuser_id = seat.user_id
             if (current_seat_state != SeatState.empty.value) and (current_seat_subuser_id == subclient_id):
-                if client.update_subclient(subclient_id=subclient_id, seated=False):
-                    if game.update_seat(seat_number=seat_number, nickname='', seat_state=SeatState.empty.value):
-                        url = reverse('GameAssistant:going_room_guest')
-                        return HttpResponseRedirect(url)
-                    else:
-                        return HttpResponseBadRequest("Unknown error happened! Failed to update user!")
+                if game.update_seat(seat_number=seat_number, user_id='', seat_state=SeatState.empty.value):
+                    url = reverse('GameAssistant:going_room_guest')
+                    return HttpResponseRedirect(url)
                 else:
-                    return HttpResponseBadRequest("Unknown error happened! Failed to update client!")
+                    return HttpResponseBadRequest("Unknown error happened! Failed to update user!")
 
         url = reverse('GameAssistant:going_room_guest')
         return HttpResponseRedirect(url)
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
-
 

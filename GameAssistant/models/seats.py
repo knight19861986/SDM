@@ -8,10 +8,9 @@ class Seat(EmbeddedDocument):
     seat_number = IntField(default = 0, required=True)
     game_code = StringField(max_length = 200, required=True)
     seat_state = IntField(default = 0, required=True)
-    subuser_id = StringField(max_length = 200, default = "")
-    nickname = StringField(max_length = 200, default = "")
+    user_id = StringField(max_length = 200, default = "")
     time_created = DateTimeField(default = datetime.now)
-    time_modified = DateTimeField(default=datetime.now)
+    time_modified = DateTimeField(default = datetime.now)
 
     meta = {
         'indexes': [

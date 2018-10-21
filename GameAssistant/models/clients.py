@@ -25,17 +25,14 @@ class Client(Document):
     }
 
     def generate_subclient_id(self):
-        no_of_subuser = len(self.subclients) + 1
         timestamp = time.time()
         return 'friend' + str(int(timestamp*1000000)) + '@' +self.client_id
-
 
     def _get_next_subclient_name(self):
         self._subuser_counter += 1
         if self._subuser_counter > 1000:
             self._subuser_counter = 1
         return 'Friend No.' + str(self._subuser_counter)
-
 
     def add_subclient(self, **kwargs):
         subclient_name = self._get_next_subclient_name()

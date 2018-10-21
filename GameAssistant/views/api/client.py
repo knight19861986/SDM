@@ -7,7 +7,7 @@ import re
 from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
-from GameAssistant.libs.utils import check_auth
+from GameAssistant.libs.utils import check_auth, get_client_id_from_session
 
 @check_auth('guest')
 def create(request):
@@ -72,6 +72,11 @@ def exit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed')
     if 'client_id' in request.session:
+        #To clean the subclients temporarily:
+        client_id = get_client_id_from_session(request)
+        client = Client.objects(client_id = client_id).first()
+        client.clear_subclients()
+
         request.session.flush()
         url = reverse('GameAssistant:sign_in', args=[''])
         return HttpResponseRedirect(url)

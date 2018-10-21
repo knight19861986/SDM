@@ -5,7 +5,6 @@ from mongoengine import *
 class SubClient(EmbeddedDocument):
     subclient_id = StringField(max_length = 200)
     subclient_name = StringField(max_length = 200)
-    seated = BooleanField(default = False)
     time_created = DateTimeField(default=datetime.now)
     time_modified = DateTimeField(default=datetime.now)
 
