@@ -31,7 +31,7 @@
             $('#headline').append(ret['RoomNumber']);
             $('#gamecode').append(ret['GameCode']);
         });
-        setInterval(function(){
+        // setInterval(function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
                 $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
@@ -69,7 +69,7 @@
                     $('#seatlistbody').append(html_to_append);
                 });
             });
-        }, 1000);
+        // }, 2000);
     });
 </script> 
 

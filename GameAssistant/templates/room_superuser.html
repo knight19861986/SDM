@@ -29,9 +29,8 @@
             $('#headline').append(ret['RoomNumber']);
             $('#gamecode').append(ret['GameCode']);
         });
-        setInterval(function(){
+        var set_seats = function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
-                $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
                     $('#seatlistbody').append(
                         "<tr>=\n" + 
@@ -48,7 +47,14 @@
                     );
                 });
             });
-        }, 1000);
+        };
+
+        set_seats();
+        // setInterval(function(){
+        //     $('#seatlistbody').empty();
+        //     set_seats();
+        // }, 1000)
+
     });
 </script> 
 
