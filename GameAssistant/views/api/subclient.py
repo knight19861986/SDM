@@ -128,7 +128,7 @@ def unsit(request):
                     url = reverse('GameAssistant:going_room_guest')
                     return HttpResponseRedirect(url)
                 else:
-                    return HttpResponseBadRequest("Unknown error happened! Failed to update user!")
+                    return HttpResponseBadRequest("Unknown error happened! Failed to update game!")
 
         url = reverse('GameAssistant:going_room_guest')
         return HttpResponseRedirect(url)
