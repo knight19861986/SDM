@@ -121,6 +121,13 @@ def decorator_example(args):
         return wrapper
     return _decorator_example
 
+#Works for both super_user and sub_user
+def user_is_seated(user_id, game):
+    for seat in game.game_seats:
+        if seat.user_id == user_id:
+            return True
+    return False
+
 #Used for:
 #Get the client_id when being logged in as a super-user;
 #Get the client_id of its super user when working as a sub-user;
