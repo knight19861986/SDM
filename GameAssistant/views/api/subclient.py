@@ -101,7 +101,7 @@ def sit(request):
         return HttpResponseRedirect(url)
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running subclient.sit! Details: {0}'.format(e))
 
 @game_ongoing('yes', 'subuser')
 def unsit(request):
@@ -134,5 +134,5 @@ def unsit(request):
         return HttpResponseRedirect(url)
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running seat.sit_subclient! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running subclient.unsit! Details: {0}'.format(e))
 
