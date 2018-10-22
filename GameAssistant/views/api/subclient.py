@@ -122,8 +122,8 @@ def unsit(request):
         if _subclient_is_seated(subclient, game):            
             seat = game.game_seats.filter(seat_number=seat_number).first()
             current_seat_state = seat.seat_state
-            current_seat_subuser_id = seat.user_id
-            if (current_seat_state != SeatState.empty.value) and (current_seat_subuser_id == subclient_id):
+            current_seat_user_id = seat.user_id
+            if (current_seat_state != SeatState.empty.value) and (current_seat_user_id == subclient_id):
                 if game.update_seat(seat_number=seat_number, user_id='', seat_state=SeatState.empty.value):
                     url = reverse('GameAssistant:going_room_guest')
                     return HttpResponseRedirect(url)
