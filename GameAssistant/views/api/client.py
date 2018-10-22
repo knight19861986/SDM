@@ -5,9 +5,11 @@ from datetime import datetime
 import re
 #from mongoengine import *
 from django.contrib.sessions.models import Session
+from GameAssistant.models.games import Game
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
 from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, user_is_seated
+from GameAssistant.libs.enums import SeatState
 
 @check_auth('guest')
 def create(request):
@@ -114,8 +116,6 @@ def sit(request):
         sessionid = request.COOKIES.get('sessionid')
         session = Session.objects.get(session_key=sessionid)
         client_id = session.get_decoded().get('client_id')
-
-        client = Client.objects(client_id=client_id).first()
         game = Game.objects(game_code=game_code).first()
 
         if not user_is_seated(client_id, game):
@@ -144,8 +144,6 @@ def unsit(request):
         sessionid = request.COOKIES.get('sessionid')
         session = Session.objects.get(session_key=sessionid)
         client_id = session.get_decoded().get('client_id')
-
-        client = Client.objects(client_id=client_id).first()
         game = Game.objects(game_code = game_code).first()
 
         if user_is_seated(client_id, game):            
@@ -164,4 +162,32 @@ def unsit(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.unsit! Details: {0}'.format(e))
+
+@game_ongoing('yes', 'superuser')
+def remove(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+        game_code = request.POST.get('game_code')
+        seat_number = request.POST.get('seat_number')
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        game = Game.objects(game_code = game_code).first()
+          
+        seat = game.game_seats.filter(seat_number=seat_number).first()
+        current_seat_state = seat.seat_state
+        current_seat_user_id = seat.user_id
+        if current_seat_state == SeatState.subuser.value:
+            if game.update_seat(seat_number=seat_number, user_id='', seat_state=SeatState.empty.value):
+                url = reverse('GameAssistant:going_room')
+                return HttpResponseRedirect(url)
+            else:
+                return HttpResponseBadRequest("Unknown error happened! Failed to update game!")
+
+        url = reverse('GameAssistant:going_room')
+        return HttpResponseRedirect(url)
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 

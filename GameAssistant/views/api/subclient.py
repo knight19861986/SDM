@@ -9,7 +9,6 @@ from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, user_is_seated
 from GameAssistant.libs.enums import SeatState
-from django.shortcuts import render
 
 @check_auth('guest')
 def enter(request):
@@ -74,9 +73,6 @@ def sit(request):
         session = Session.objects.get(session_key=sessionid)
         subclient_id = session.get_decoded().get('subclient_id')
         client_id = subclient_id.split('@',1)[-1]
-
-        client = Client.objects(client_id=client_id).first()
-        subclient = client.subclients.filter(subclient_id=subclient_id).first()
         game = Game.objects(game_code=game_code).first()
 
         if not user_is_seated(subclient_id, game):
@@ -106,9 +102,6 @@ def unsit(request):
         session = Session.objects.get(session_key=sessionid)
         subclient_id = session.get_decoded().get('subclient_id')
         client_id = subclient_id.split('@',1)[-1]
-
-        client = Client.objects(client_id=client_id).first()
-        subclient = client.subclients.filter(subclient_id=subclient_id).first()
         game = Game.objects(game_code = game_code).first()
 
         if user_is_seated(subclient_id, game):            

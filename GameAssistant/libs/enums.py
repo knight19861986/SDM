@@ -6,3 +6,4 @@ class SeatState(Enum):
     empty = 0
     superuser = 1
     subuser = 2
+

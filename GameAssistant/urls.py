@@ -25,6 +25,9 @@ urlpatterns = [
     url(r'^client/enter/$', client.enter, name='client_enter'),
     url(r'^client/exit/$', client.exit, name='client_exit'),
     url(r'^client/ajax_profile/$', client.get_client, name='client_profile'),
+    url(r'^client/sit/$', client.sit, name='client_sit'),
+    url(r'^client/unsit/$', client.unsit, name='client_unsit'),
+    url(r'^client/remove/$', client.remove, name='client_remove'),
 
     ############### SubClient ##############
     url(r'^subclient/enter/$', subclient.enter, name='subclient_enter'),
