@@ -165,6 +165,3 @@ def unsit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.unsit! Details: {0}'.format(e))
 
-
-
-
