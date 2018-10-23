@@ -7,7 +7,7 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
-from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, user_is_seated
+from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, get_user_id_from_session, user_is_seated
 from GameAssistant.libs.enums import SeatState
 
 @check_auth('guest')
@@ -120,5 +120,23 @@ def unsit(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.unsit! Details: {0}'.format(e))
+
+
+@game_ongoing('yes', 'subuser')
+def edit(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+        new_name = request.POST.get('new_name')
+        client_id = get_client_id_from_session(request)
+        subclient_id = get_user_id_from_session(request)
+        client = Client.objects(client_id = client_id).first()
+
+        client.update_subclient(subclient_id=subclient_id, subclient_name=new_name)
+        url = reverse('GameAssistant:going_room_guest')
+        return HttpResponseRedirect(url)
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running subclient.edit! Details: {0}'.format(e))
 
 

@@ -6,9 +6,26 @@
 <H1 id='headline' ALIGN="center">Room </H1>
 </div>
 
-<div>
-    <p id='gamecode'>Game Code: </p>
-</div>
+<table id = 'inormation'>
+    <tbody>
+        <tr>
+            <td>
+                <p id='gamecode'>Game Code: </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id='playername'>Player: </p>
+            </td>
+            <td>
+                <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:subclient_edit' %}" onSubmit="return editName('new_name')">{% csrf_token %}
+                    <input type="hidden" id='new_name' name='new_name'>
+                    <input type="submit" value="Edit Name">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <table id = 'seatlist' border="0">
     <tbody id = 'seatlistbody' />
@@ -22,6 +39,14 @@
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
+    function editName(elementId, defaultText) {
+        var newName = prompt("Please enter new name:", defaultText);
+        if (newName) {
+            document.getElementById(elementId).setAttribute("value", newName);
+            return true;
+            }
+        return false;
+    }
     function leaveConfirm() {
         return window.confirm("Are you sure you want to leave this game?\nYou can come back by submitting the same game code");
     }
@@ -30,6 +55,7 @@
         $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
             $('#headline').append(ret['RoomNumber']);
             $('#gamecode').append(ret['GameCode']);
+            $('#playername').append(ret['UserName']);
         });
         // setInterval(function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){

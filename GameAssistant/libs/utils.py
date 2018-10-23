@@ -1,5 +1,7 @@
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest,HttpResponseForbidden
 from django.urls import reverse
+from GameAssistant.models.clients import Client
+from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from django.contrib.sessions.models import Session
 
@@ -163,4 +165,25 @@ def get_user_id_from_session(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running utils.get_user_id_from_session! Details: {0}'.format(e))
+
+#Used for:
+#Get the client_name when being logged in as a super-user;
+#Get the subclient_name when working as a sub-user;
+@check_auth('user')
+def get_user_name_from_session(request):
+    try:
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        if not client_id:
+            subclient_id = session.get_decoded().get('subclient_id')
+            client_id = subclient_id.split('@',1)[-1]
+            subclient = Client.objects(client_id=client_id).first().subclients.filter(subclient_id=subclient_id).first()
+            return subclient.subclient_name
+        else:
+            client = Client.objects(client_id=client_id).first()
+            return client.client_name
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running utils.get_user_name_from_session! Details: {0}'.format(e))
 

@@ -33,6 +33,7 @@ urlpatterns = [
     url(r'^subclient/enter/$', subclient.enter, name='subclient_enter'),
     url(r'^subclient/sit/$', subclient.sit, name='subclient_sit'),
     url(r'^subclient/unsit/$', subclient.unsit, name='subclient_unsit'),
+    url(r'^subclient/edit/$', subclient.edit, name='subclient_edit'),
 
 
     ############### Game ###################
