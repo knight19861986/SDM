@@ -47,6 +47,6 @@ Step 2: Intallation and initiation of MongoDB
 
 Will be updated later
 
-Step 3: Initiation and running the application
+Step 3: Initiation and running of the application
 
 Will be updated later
