@@ -176,7 +176,6 @@ def remove(request):
           
         seat = game.game_seats.filter(seat_number=seat_number).first()
         current_seat_state = seat.seat_state
-        current_seat_user_id = seat.user_id
         if current_seat_state == SeatState.subuser.value:
             if game.update_seat(seat_number=seat_number, user_id='', seat_state=SeatState.empty.value):
                 url = reverse('GameAssistant:going_room')
@@ -190,7 +189,7 @@ def remove(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 
-@game_ongoing('yes', 'super')
+@game_ongoing('yes', 'superuser')
 def rename(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -203,5 +202,34 @@ def rename(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.rename! Details: {0}'.format(e))
+    
+@game_ongoing('yes', 'superuser')
+def edit(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+        new_name = request.POST.get('new_name')
+        game_code = request.POST.get('game_code')
+        seat_number = request.POST.get('seat_number')        
+        client_id = get_client_id_from_session(request)
+        
+        client = Client.objects(client_id = client_id).first()        
+        game = Game.objects(game_code = game_code).first()          
+        seat = game.game_seats.filter(seat_number=seat_number).first()
+        current_seat_state = seat.seat_state
+        current_seat_user_id = seat.user_id
+        
+        if current_seat_state == SeatState.subuser.value:
+            if client.update_subclient(subclient_id=current_seat_user_id, subclient_name=new_name):
+                url = reverse('GameAssistant:going_room')
+                return HttpResponseRedirect(url)
+            else:
+                return HttpResponseBadRequest("Unknown error happened! Failed to update subclient!")
+
+        url = reverse('GameAssistant:going_room')
+        return HttpResponseRedirect(url)
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running client.edit! Details: {0}'.format(e))
     
    
