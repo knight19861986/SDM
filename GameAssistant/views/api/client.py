@@ -3,7 +3,6 @@ from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
 from django.urls import reverse
 from datetime import datetime
 import re
-#from mongoengine import *
 from django.contrib.sessions.models import Session
 from GameAssistant.models.games import Game
 from GameAssistant.models.clients import Client
@@ -191,3 +190,18 @@ def remove(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 
+@game_ongoing('yes', 'super')
+def rename(request):
+    if request.method != 'POST':
+        return HttpResponseBadRequest('Only POST are allowed!')
+    try:
+        new_name = request.POST.get('new_name')
+        client_id = get_client_id_from_session(request)
+        Client.objects(client_id = client_id).update(client_name=new_name, time_modified=datetime.now)
+        url = reverse('GameAssistant:going_room_guest')
+        return HttpResponseRedirect(url)
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running client.rename! Details: {0}'.format(e))
+    
+   
