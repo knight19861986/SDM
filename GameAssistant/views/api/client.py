@@ -197,7 +197,7 @@ def rename(request):
         new_name = request.POST.get('new_name')
         client_id = get_client_id_from_session(request)
         Client.objects(client_id = client_id).update(client_name=new_name, time_modified=datetime.now)
-        url = reverse('GameAssistant:going_room_guest')
+        url = reverse('GameAssistant:going_room')
         return HttpResponseRedirect(url)
 
     except Exception as e:
