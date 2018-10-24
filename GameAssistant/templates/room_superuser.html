@@ -6,7 +6,7 @@
 <H1 id='headline' ALIGN="center">Room </H1>
 </div>
 
-<table id = 'inormation'>
+<table id = 'information'>
     <tbody>
         <tr>
             <td>
@@ -95,11 +95,13 @@
                         }
                         else
                         if (value.SeatState == 2){
+                            var currentInputId = "new_name_of_" + value.SeatNumber
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_remove' %}\" onSubmit=\"return removeConfirm()\">" +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_edit' %}\" onSubmit=\"return editName('" + currentInputId + "')\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='hidden' id=" + currentInputId + " name='new_name'>" +
                             "           <input type='submit' value='Edit Name'> " +
                             "       </form>" +
                             "   </td>" +
@@ -115,19 +117,6 @@
                     html_to_append += "</tr>";
 
                     $('#seatlistbody').append(html_to_append);
-                    // $('#seatlistbody').append(
-                    //     "<tr>=\n" + 
-                    //     "   <td align='right'> Seat " + value.SeatNumber + ": " + 
-                    //     "   </td>" +
-                    //     "   <td>" + value.NickName + 
-                    //     "   </td>" + 
-                    //     "   <td align='right'> " +
-                    //     "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:game_delete' %}\" onSubmit='return endConfirm()'>" +'{% csrf_token %}' +
-                    //     "           <input type='submit' value='Sit' > " +
-                    //     "       </form>" +
-                    //     "   </td>" +
-                    //     "</tr>"
-                    // );
                 });
             });
         };

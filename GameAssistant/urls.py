@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^client/unsit/$', client.unsit, name='client_unsit'),
     url(r'^client/remove/$', client.remove, name='client_remove'),
     url(r'^client/rename/$', client.rename, name='client_rename'),
+    url(r'^client/edit/$', client.edit, name='client_edit'),
 
     ############### SubClient ##############
     url(r'^subclient/enter/$', subclient.enter, name='subclient_enter'),
