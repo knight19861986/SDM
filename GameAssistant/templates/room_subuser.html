@@ -17,7 +17,7 @@
             <td>
                 <p id='playername'>Player: </p>
             </td>
-            <td>
+            <td align='right'>
                 <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:subclient_edit' %}" onSubmit="return editName('new_name')">{% csrf_token %}
                     <input type="hidden" id='new_name' name='new_name'>
                     <input type="submit" value="Edit Name">
@@ -47,6 +47,9 @@
             }
         return false;
     }
+    function cancelConfirm() {
+        return window.confirm("Are you sure you want to cancel sitting here?");
+    }
     function leaveConfirm() {
         return window.confirm("Are you sure you want to leave this game?\nYou can come back by submitting the same game code");
     }
@@ -71,10 +74,10 @@
                     if (value.UserSeated){
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\" >" +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\"  onSubmit=\"return cancelConfirm()\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Cancel'/> " +
+                            "           <input type='submit' value='Cancel'> " +
                             "       </form>" +
                             "   </td>";
                         }
@@ -85,7 +88,7 @@
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Sit'/> " +
+                            "           <input type='submit' value='Sit'> " +
                             "       </form>" +
                             "   </td>";
                         }

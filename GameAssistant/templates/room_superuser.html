@@ -17,7 +17,7 @@
             <td>
                 <p id='playername'>Player: </p>
             </td>
-            <td>
+            <td align='right'>
                 <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:client_rename' %}" onSubmit="return editName('new_name')">{% csrf_token %}
                     <input type="hidden" id='new_name' name='new_name'>
                     <input type="submit" value="Edit Name">
@@ -49,6 +49,9 @@
     function endConfirm() {
         return window.confirm("Are you sure you want to end this game?");
     }
+    function cancelConfirm() {
+        return window.confirm("Are you sure you want to cancel sitting here?");
+    }
     function removeConfirm() {
         return window.confirm("Are you sure you want to remove this player?");
     }
@@ -72,10 +75,10 @@
                     if (value.SeatState == 1){
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_unsit' %}\" >" +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_unsit' %}\" onSubmit=\"return cancelConfirm()\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Cancel'/> " +
+                            "           <input type='submit' value='Cancel'> " +
                             "       </form>" +
                             "   </td>";
                         }
@@ -86,7 +89,7 @@
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_sit' %}\" >" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Sit'/> " +
+                            "           <input type='submit' value='Sit'> " +
                             "       </form>" +
                             "   </td>";
                         }
@@ -97,7 +100,14 @@
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_remove' %}\" onSubmit=\"return removeConfirm()\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Remove'/> " +
+                            "           <input type='submit' value='Edit Name'> " +
+                            "       </form>" +
+                            "   </td>" +
+                            "   <td align='left'> " +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_remove' %}\" onSubmit=\"return removeConfirm()\">" +'{% csrf_token %}' +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='submit' value='Remove'> " +
                             "       </form>" +
                             "   </td>";
                         }
