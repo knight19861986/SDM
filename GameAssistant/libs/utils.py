@@ -32,10 +32,15 @@ def check_auth(auth_level):
                             subclient_id = session.get_decoded().get('subclient_id')
                             client_id = subclient_id.split('@',1)[-1]
                             client = Client.objects(client_id = client_id).first()
-
-                            if client and client.has_subclient(subclient_id):
-                                return func(request, *callback_args, **callback_kwargs)
-
+                            if client:
+                                if client.has_subclient(subclient_id):
+                                    return func(request, *callback_args, **callback_kwargs)
+                                else:
+                                    url = reverse('GameAssistant:home_index', args=['3'])
+                                    return HttpResponseRedirect(url)
+                            else:
+                                url = reverse('GameAssistant:home_index', args=['4'])
+                                return HttpResponseRedirect(url)
                         return HttpResponseForbidden('Session of subuser expired! Please join a game again!')
 
                     else:
