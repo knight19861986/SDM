@@ -28,10 +28,16 @@ def check_auth(auth_level):
                             url = reverse('GameAssistant:start_profile', args=[''])
                             return HttpResponseRedirect(url)
                         elif session and session.get_decoded().get('subclient_id'):
-                            return func(request, *callback_args, **callback_kwargs)
+                            #Need to check if the client has this subclient!
+                            subclient_id = session.get_decoded().get('subclient_id')
+                            client_id = subclient_id.split('@',1)[-1]
+                            client = Client.objects(client_id = client_id).first()
 
-                        else:
-                            return HttpResponseForbidden('Session of subuser not existed!')
+                            if client and client.has_subclient(subclient_id):
+                                return func(request, *callback_args, **callback_kwargs)
+
+                        return HttpResponseForbidden('Session of subuser expired! Please join a game again!')
+
                     else:
                         return HttpResponseForbidden('COOKIES expired!')
 
