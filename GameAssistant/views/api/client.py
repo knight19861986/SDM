@@ -61,7 +61,7 @@ def enter(request):
             return HttpResponseRedirect(url)
 
         else:
-            request.session.set_expiry(60*60*24) 
+            request.session.set_expiry(60*60*24*3) 
             request.session['client_id'] = client_id
             url = reverse('GameAssistant:start_profile', args=[''])
             return HttpResponseRedirect(url)
