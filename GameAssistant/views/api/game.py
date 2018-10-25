@@ -8,7 +8,8 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
-from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session
+from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, get_user_id_from_session, get_user_name_from_session
+from GameAssistant.libs.enums import SeatState
 
 @game_ongoing('no', 'superuser')
 def create(request):
@@ -52,20 +53,33 @@ def create(request):
 def get_seats(request):
     try:
         client_id = get_client_id_from_session(request)
+        user_id = get_user_id_from_session(request)
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             ret = []
             for seat in game.game_seats:
-                ret.append({
+                nickname = 'Waiting'
+                user_seated = False
+                if seat.seat_state == SeatState.superuser.value:
+                    nickname = Client.objects(client_id=seat.user_id).first().client_name
+                    if client_id == user_id:
+                        user_seated = True
+                elif seat.seat_state == SeatState.subuser.value:
+                    nickname = Client.objects(client_id=client_id).first().subclients.filter(subclient_id=seat.user_id).first().subclient_name
+                    if user_id == seat.user_id:
+                        user_seated = True
+                ret.append({                    
                     'SeatNumber': seat.seat_number,
-                    'NickName': seat.nickname if seat.nickname else 'Waiting',
-
+                    'GameCode': game.game_code,                    
+                    'SeatState': seat.seat_state,
+                    'NickName': nickname,
+                    'UserSeated': user_seated
                     })
 
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running game.get_seats! Details: {0}'.format(e))
 
 
 @check_auth('user')
@@ -75,9 +89,10 @@ def get_game(request):
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
             ret = {}
-            ret['Room number'] = game.room_number
-            ret['Game code'] = game.game_code
-            ret['Number of players'] = game.num_of_players
+            ret['RoomNumber'] = game.room_number
+            ret['GameCode'] = game.game_code
+            ret['NumberOfPlayers'] = game.num_of_players
+            ret['UserName'] = get_user_name_from_session(request)
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
@@ -94,9 +109,6 @@ def delete(request):
             game = Game.objects(client_id = client_id).first()
             game.delete()
             url = reverse('GameAssistant:start_profile', args=[''])
-            #To clean the subclients temporarily:
-            client = Client.objects(client_id = client_id).first()
-            client.clear_subclients()
             return HttpResponseRedirect(url)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:

@@ -6,9 +6,26 @@
 <H1 id='headline' ALIGN="center">Room </H1>
 </div>
 
-<div>
-    <p id='gamecode'>Game Code: </p>
-</div>
+<table id = 'information'>
+    <tbody>
+        <tr>
+            <td>
+                <p id='gamecode'>Game Code: </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id='playername'>Player: </p>
+            </td>
+            <td align='right'>
+                <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:client_rename' %}" onSubmit="return editName('new_name')">{% csrf_token %}
+                    <input type="hidden" id='new_name' name='new_name'>
+                    <input type="submit" value="Edit Name">
+                </form>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 <table id = 'seatlist' border="0">
     <tbody id = 'seatlistbody' />
@@ -16,43 +33,100 @@
 
 <br>
 <form name="button_end" method="post" action="{% url 'GameAssistant:game_delete' %}" onSubmit="return endConfirm()">{% csrf_token %}
-    <input type="submit" value="EndGame"/>       
+    <input type="submit" value="EndGame">
 </form>
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
+    function editName(elementId, defaultText) {
+        var newName = prompt("Please enter new name:", defaultText);
+        if (newName) {
+            document.getElementById(elementId).setAttribute("value", newName);
+            return true;
+            }
+        return false;
+    }
     function endConfirm() {
         return window.confirm("Are you sure you want to end this game?");
     }
+    function cancelConfirm() {
+        return window.confirm("Are you sure you want to cancel sitting here?");
+    }
+    function removeConfirm() {
+        return window.confirm("Are you sure you want to remove this player?");
+    }
 
     $(document).ready(function(){
-        $('#allObjects').ready(function(){
-            $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-                $('#headline').append(ret['Room number']);
-                $('#gamecode').append(ret['Game code']);                
-
-            });
+        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+            $('#headline').append(ret['RoomNumber']);
+            $('#gamecode').append(ret['GameCode']);
+            $('#playername').append(ret['UserName']);
+        });
+        var set_seats = function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
                 $.each(ret, function(key,value){
-                    $('#seatlistbody').append(
+                    var html_to_append = 
                         "<tr>=\n" + 
                         "   <td align='right'> Seat " + value.SeatNumber + ": " + 
                         "   </td>" +
                         "   <td>" + value.NickName + 
-                        "   </td>" + 
-                        "   <td align='right'> " +
-                        "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:game_delete' %}\" onSubmit='return endConfirm()'>" +'{% csrf_token %}' +
-                        "           <input type='submit' value='Sit'/> " +
-                        "       </form>" +
-                        "   </td>" +
-                        "</tr>"
-                    );
+                        "   </td>";
 
+                    if (value.SeatState == 1){
+                            html_to_append +=
+                            "   <td align='right'> " +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_unsit' %}\" onSubmit=\"return cancelConfirm()\">" +'{% csrf_token %}' +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='submit' value='Cancel'> " +
+                            "       </form>" +
+                            "   </td>";
+                        }
+                    else
+                        if (value.SeatState == 0){
+                            html_to_append +=
+                            "   <td align='right'> " +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_sit' %}\" >" +'{% csrf_token %}' +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='submit' value='Sit'> " +
+                            "       </form>" +
+                            "   </td>";
+                        }
+                        else
+                        if (value.SeatState == 2){
+                            var currentInputId = "new_name_of_" + value.SeatNumber
+                            html_to_append +=
+                            "   <td align='right'> " +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_edit' %}\" onSubmit=\"return editName('" + currentInputId + "')\">" +'{% csrf_token %}' +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='hidden' id=" + currentInputId + " name='new_name'>" +
+                            "           <input type='submit' value='Edit Name'> " +
+                            "       </form>" +
+                            "   </td>" +
+                            "   <td align='left'> " +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_remove' %}\" onSubmit=\"return removeConfirm()\">" +'{% csrf_token %}' +
+                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                            "           <input type='submit' value='Remove'> " +
+                            "       </form>" +
+                            "   </td>";
+                        }
 
+                    html_to_append += "</tr>";
+
+                    $('#seatlistbody').append(html_to_append);
                 });
-
             });
-        })
+        };
+
+        set_seats();
+        // setInterval(function(){
+        //     $('#seatlistbody').empty();
+        //     set_seats();
+        // }, 1000)
+
     });
 </script> 
 

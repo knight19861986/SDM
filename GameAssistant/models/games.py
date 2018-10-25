@@ -22,14 +22,17 @@ class Game(Document):
     }
 
 
-    def update_seat(self, **kwargs):
-        seat = self.game_seats.filter(seat_number = kwargs['seat_number'])
-
-        try: 
+    def update_seat(self, seat_number, **kwargs):
+        seat = self.game_seats.filter(seat_number = seat_number).first()
+        seat.time_modified = datetime.now
+        for key, value in kwargs.items():
+            if hasattr(seat, key):
+                setattr(seat, key, kwargs[key])
+        try:
             self.save()
             return True
         except:
             return False
 
     def __unicode__(self):
-        return self.room_number
+        return self.game_code

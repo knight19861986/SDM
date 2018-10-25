@@ -25,10 +25,8 @@ class Client(Document):
     }
 
     def generate_subclient_id(self):
-        no_of_subuser = len(self.subclients) + 1
         timestamp = time.time()
         return 'friend' + str(int(timestamp*1000000)) + '@' +self.client_id
-
 
     def _get_next_subclient_name(self):
         self._subuser_counter += 1
@@ -36,13 +34,24 @@ class Client(Document):
             self._subuser_counter = 1
         return 'Friend No.' + str(self._subuser_counter)
 
-
     def add_subclient(self, **kwargs):
         subclient_name = self._get_next_subclient_name()
         subclient_id = kwargs['subclient_id'] if 'subclient_id' in kwargs else self.generate_subclient_id()
         subclient = SubClient(subclient_id = subclient_id, subclient_name = subclient_name)
         self.subclients.append(subclient)
-        try: 
+        try:
+            self.save()
+            return True
+        except:
+            return False
+
+    def update_subclient(self, subclient_id, **kwargs):
+        subclient = self.subclients.filter(subclient_id = subclient_id).first()
+        subclient.time_modified = datetime.now
+        for key, value in kwargs.items():
+            if hasattr(subclient, key):
+                setattr(subclient, key, kwargs[key])
+        try:
             self.save()
             return True
         except:
@@ -58,7 +67,7 @@ class Client(Document):
     def clear_subclients(self):
         self.subclients.delete()
         self._subuser_counter = 0
-        try: 
+        try:
             self.save()
             return True
         except:

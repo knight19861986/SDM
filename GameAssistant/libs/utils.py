@@ -1,5 +1,7 @@
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest,HttpResponseForbidden
 from django.urls import reverse
+from GameAssistant.models.clients import Client
+from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from django.contrib.sessions.models import Session
 
@@ -26,10 +28,21 @@ def check_auth(auth_level):
                             url = reverse('GameAssistant:start_profile', args=[''])
                             return HttpResponseRedirect(url)
                         elif session and session.get_decoded().get('subclient_id'):
-                            return func(request, *callback_args, **callback_kwargs)
+                            #Need to check if the client has this subclient!
+                            subclient_id = session.get_decoded().get('subclient_id')
+                            client_id = subclient_id.split('@',1)[-1]
+                            client = Client.objects(client_id = client_id).first()
+                            if client:
+                                if client.has_subclient(subclient_id):
+                                    return func(request, *callback_args, **callback_kwargs)
+                                else:
+                                    url = reverse('GameAssistant:home_index', args=['3'])
+                                    return HttpResponseRedirect(url)
+                            else:
+                                url = reverse('GameAssistant:home_index', args=['4'])
+                                return HttpResponseRedirect(url)
+                        return HttpResponseForbidden('Session of subuser expired! Please join a game again!')
 
-                        else:
-                            return HttpResponseForbidden('Session of subuser not existed!')
                     else:
                         return HttpResponseForbidden('COOKIES expired!')
 
@@ -121,7 +134,16 @@ def decorator_example(args):
         return wrapper
     return _decorator_example
 
+#Works for both super_user and sub_user
+def user_is_seated(user_id, game):
+    for seat in game.game_seats:
+        if seat.user_id == user_id:
+            return True
+    return False
 
+#Used for:
+#Get the client_id when being logged in as a super-user;
+#Get the client_id of its super user when working as a sub-user;
 @check_auth('user')
 def get_client_id_from_session(request):
     try:
@@ -130,7 +152,7 @@ def get_client_id_from_session(request):
         client_id = session.get_decoded().get('client_id')
         if not client_id:
             subclient_id = session.get_decoded().get('subclient_id')
-            client_id = subclient_id.split('@')[-1]
+            client_id = subclient_id.split('@',1)[-1]
             if not client_id: 
                 return HttpResponseBadRequest('Unknown error happened! Might be due to expired COOKIES or illegal subclient_id!')
         return client_id
@@ -138,5 +160,41 @@ def get_client_id_from_session(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running utils.get_client_id_from_session! Details: {0}'.format(e))
 
+#Used for:
+#Get the client_id when being logged in as a super-user;
+#Get the subclient_id when working as a sub-user;
+@check_auth('user')
+def get_user_id_from_session(request):
+    try:
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        if not client_id:
+            subclient_id = session.get_decoded().get('subclient_id')
+            return subclient_id
+        return client_id
 
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running utils.get_user_id_from_session! Details: {0}'.format(e))
+
+#Used for:
+#Get the client_name when being logged in as a super-user;
+#Get the subclient_name when working as a sub-user;
+@check_auth('user')
+def get_user_name_from_session(request):
+    try:
+        sessionid = request.COOKIES.get('sessionid')
+        session = Session.objects.get(session_key=sessionid)
+        client_id = session.get_decoded().get('client_id')
+        if not client_id:
+            subclient_id = session.get_decoded().get('subclient_id')
+            client_id = subclient_id.split('@',1)[-1]
+            subclient = Client.objects(client_id=client_id).first().subclients.filter(subclient_id=subclient_id).first()
+            return subclient.subclient_name
+        else:
+            client = Client.objects(client_id=client_id).first()
+            return client.client_name
+
+    except Exception as e:
+        return HttpResponseBadRequest('Unknown error while running utils.get_user_name_from_session! Details: {0}'.format(e))
 

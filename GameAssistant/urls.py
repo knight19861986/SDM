@@ -25,11 +25,17 @@ urlpatterns = [
     url(r'^client/enter/$', client.enter, name='client_enter'),
     url(r'^client/exit/$', client.exit, name='client_exit'),
     url(r'^client/ajax_profile/$', client.get_client, name='client_profile'),
+    url(r'^client/sit/$', client.sit, name='client_sit'),
+    url(r'^client/unsit/$', client.unsit, name='client_unsit'),
+    url(r'^client/remove/$', client.remove, name='client_remove'),
+    url(r'^client/rename/$', client.rename, name='client_rename'),
+    url(r'^client/edit/$', client.edit, name='client_edit'),
 
     ############### SubClient ##############
     url(r'^subclient/enter/$', subclient.enter, name='subclient_enter'),
     url(r'^subclient/sit/$', subclient.sit, name='subclient_sit'),
     url(r'^subclient/unsit/$', subclient.unsit, name='subclient_unsit'),
+    url(r'^subclient/edit/$', subclient.edit, name='subclient_edit'),
 
 
     ############### Game ###################
