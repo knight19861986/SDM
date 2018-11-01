@@ -8,7 +8,7 @@ Step 1: Intallation and configuration of python
 1. Install Python (Please find instructions from google).
 2. Setup virtualenv and install dependencies:
   ```
-  python -m venv <name of venv>  # The executable might also be called just `python`
+  python3 -m venv <name of venv>  # The executable might also be called just `python`
   source <name of venv>/bin/activate
   pip install -r requirements.txt
   ```
