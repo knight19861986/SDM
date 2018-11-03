@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.conf.urls import url
 from GameAssistant.views.sites import home, start, going
 from GameAssistant.views.api import client, subclient, game
