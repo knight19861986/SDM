@@ -55,6 +55,10 @@
     }
 
     $(document).ready(function(){
+
+        var wSocket = new WebSocket(
+            'ws://' + window.location.host +'/ws/');
+        
         $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
             $('#headline').append(ret['RoomNumber']);
             $('#gamecode').append(ret['GameCode']);
