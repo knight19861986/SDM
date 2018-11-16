@@ -3,19 +3,19 @@
 {% block content %} 
 
 <div>
-<H1 id='headline' ALIGN="center">Room </H1>
+<H1 id='headline' ALIGN="center"><span>Room </span><span id='roomnumber'></span></H1>
 </div>
 
 <table id = 'information'>
     <tbody>
         <tr>
             <td>
-                <p id='gamecode'>Game Code: </p>
+                <p><span>Game Code: </span><span id='gamecode'></span></p>
             </td>
         </tr>
         <tr>
             <td>
-                <p id='playername'>Player: </p>
+                <p><span>Player: </span><span id='playername'></span></p>
             </td>
             <td align='right'>
                 <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:subclient_edit' %}" onSubmit="return editName('new_name')">{% csrf_token %}
@@ -56,15 +56,16 @@
 
     $(document).ready(function(){
 
-        var wSocket = new WebSocket(
-            'ws://' + window.location.host +'/ws/');
-        
-        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-            $('#headline').append(ret['RoomNumber']);
-            $('#gamecode').append(ret['GameCode']);
-            $('#playername').append(ret['UserName']);
-        });
-        // setInterval(function(){
+        var wSocket = new WebSocket('ws://' + window.location.host +'/ws/');
+        var set_game = function(){
+            $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+                $('#roomnumber').text(ret['RoomNumber']);
+                $('#gamecode').text(ret['GameCode']);
+                $('#playername').text(ret['UserName']);
+            });
+        };
+
+        var set_seats = function(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
                 $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
@@ -102,7 +103,16 @@
                     $('#seatlistbody').append(html_to_append);
                 });
             });
-        // }, 2000);
+        };
+        set_game();
+        set_seats();
+        wSocket.onmessage = function(e){
+            set_game();
+            set_seats();
+
+        }
+
+
     });
 </script> 
 
