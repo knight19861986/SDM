@@ -4,4 +4,3 @@ pymongo
 djongo
 channels
 channels_redis
-websocket-client

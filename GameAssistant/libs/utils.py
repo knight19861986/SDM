@@ -6,6 +6,7 @@ from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from django.contrib.sessions.models import Session
 
+#To refactor: change "utils.py" to "utils_auth.py"
 def check_auth(auth_level):
     def _check_auth(func):
         def wrapper(request, *callback_args, **callback_kwargs):

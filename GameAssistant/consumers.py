@@ -3,13 +3,15 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 import json
 
-class gameConsumer(WebsocketConsumer):
+class RoomConsumer(WebsocketConsumer):
     def connect(self):
-        self.room_group_name = 'Name1'
+        self.group_id = self.scope['url_route']['kwargs']['ws_id']
+        print("######") # To be removed
+        print(self.group_id) # To be removed
 
         # Join room group
         async_to_sync(self.channel_layer.group_add)(
-            self.room_group_name,
+            self.group_id,
             self.channel_name
         )
 
@@ -17,7 +19,7 @@ class gameConsumer(WebsocketConsumer):
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
-            self.room_group_name,
+            self.group_id,
             self.channel_name
         )
 
@@ -34,6 +36,7 @@ class gameConsumer(WebsocketConsumer):
 
     def logging(self, event):
         message = event['message']
+        print(message)
         self.send(text_data=json.dumps({
             'message': message
         }))

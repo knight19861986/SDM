@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import time
 from datetime import datetime
 from mongoengine import *
 from GameAssistant.models.seats import Seat
@@ -9,6 +10,7 @@ class Game(Document):
     game_code = StringField(max_length = 200, required=True)
     num_of_players = IntField(default = 4, required=True)
     time_created = DateTimeField(default = datetime.now)
+    _timestamp = IntField(default = int(time.time()*1000000))
 
     game_seats = EmbeddedDocumentListField(Seat)
 
@@ -20,6 +22,9 @@ class Game(Document):
 
         ]
     }
+
+    def websocket_id(self):
+        return 'room_' + str(self.room_number) + '_' + str(int(self._timestamp))
 
 
     def update_seat(self, seat_number, **kwargs):

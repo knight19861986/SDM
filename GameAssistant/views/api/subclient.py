@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
+from django.http import HttpResponse,HttpResponseRedirect,HttpResponseNotModified,HttpResponseBadRequest
 from django.urls import reverse
-import re
+
 from django.contrib.sessions.models import Session
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, get_user_id_from_session, user_is_seated
+from GameAssistant.libs.utils_websocket import ws_push
 from GameAssistant.libs.enums import SeatState
+import re
 
 @check_auth('guest')
 def enter(request):
@@ -62,6 +66,7 @@ def enter(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
+@ws_push('logging', 'Refresh')
 @game_ongoing('yes', 'subuser')
 def sit(request):
     if request.method != 'POST':
@@ -91,6 +96,7 @@ def sit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.sit! Details: {0}'.format(e))
 
+@ws_push('logging', 'Refresh')
 @game_ongoing('yes', 'subuser')
 def unsit(request):
     if request.method != 'POST':

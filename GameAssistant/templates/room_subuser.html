@@ -55,17 +55,13 @@
     }
 
     $(document).ready(function(){
-
-        var wSocket = new WebSocket('ws://' + window.location.host +'/ws/');
-        var set_game = function(){
-            $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-                $('#roomnumber').text(ret['RoomNumber']);
-                $('#gamecode').text(ret['GameCode']);
+        function set_name(){
+            $.getJSON("{% url 'GameAssistant:game_user' %}", function(ret){
                 $('#playername').text(ret['UserName']);
             });
         };
 
-        var set_seats = function(){
+        function set_seats(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
                 $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
@@ -104,15 +100,20 @@
                 });
             });
         };
-        set_game();
-        set_seats();
-        wSocket.onmessage = function(e){
-            set_game();
+
+        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+            $('#roomnumber').text(ret['RoomNumber']);
+            $('#gamecode').text(ret['GameCode']);
+            ws_id = ret['WsId'];
+            var webSocket = new WebSocket('ws://' + window.location.host +'/ws/' + ws_id + '/');
+            set_name();
             set_seats();
+            webSocket.onmessage = function(e){
+                set_name();
+                set_seats();
+            }
 
-        }
-
-
+        });
     });
 </script> 
 
