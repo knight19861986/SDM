@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 from asgiref.sync import async_to_sync
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer
 import json
 
-class RoomConsumer(WebsocketConsumer):
-    def connect(self):
+class RoomConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
         self.group_id = self.scope['url_route']['kwargs']['ws_id']
         # Join room group
-        async_to_sync(self.channel_layer.group_add)(
+        await self.channel_layer.group_add(
             self.group_id,
             self.channel_name
         )
 
-        self.accept()
+        await self.accept()
 
-    def disconnect(self, close_code):
+    async def disconnect(self, close_code):
         # Leave room group
-        async_to_sync(self.channel_layer.group_discard)(
+        await self.channel_layer.group_discard(
             self.group_id,
             self.channel_name
         )
 
-    def refeshing(self, event):
+    async def refeshing(self, event):
         message = event['message']
-        self.send(text_data=json.dumps({
+        await self.send(text_data=json.dumps({
             'message': message
         }))
 
