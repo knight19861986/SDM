@@ -6,7 +6,8 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.games import Game
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
-from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, user_is_seated
+from GameAssistant.libs.utils import check_auth, game_ongoing, user_is_seated
+from GameAssistant.libs.utils_session import get_client_id_from_session
 from GameAssistant.libs.utils_websocket import ws_push
 from GameAssistant.libs.enums import SeatState, RefreshType
 import re

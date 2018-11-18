@@ -19,11 +19,11 @@ def get_client_id_from_session(request):
             subclient_id = session.get_decoded().get('subclient_id')
             client_id = subclient_id.split('@',1)[-1]
             if not client_id: 
-                return HttpResponseBadRequest('Unknown error happened! Might be due to expired COOKIES or illegal subclient_id!')
+                raise Exception('Unknown error happened! Might be due to expired COOKIES or illegal subclient_id!')
         return client_id
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running utils.get_client_id_from_session! Details: {0}'.format(e))
+        raise Exception('Unknown error while running utils.get_client_id_from_session! Details: {0}'.format(e))
 
 #Used for:
 #Get the client_id when being logged in as a super-user;
@@ -40,7 +40,7 @@ def get_user_id_from_session(request):
         return client_id
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running utils.get_user_id_from_session! Details: {0}'.format(e))
+        raise Exception('Unknown error while running utils.get_user_id_from_session! Details: {0}'.format(e))
 
 #Used for:
 #Get the client_name when being logged in as a super-user;
@@ -61,7 +61,7 @@ def get_user_name_from_session(request):
             return client.client_name
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running utils.get_user_name_from_session! Details: {0}'.format(e))
+        raise Exception('Unknown error while running utils.get_user_name_from_session! Details: {0}'.format(e))
 
 #Used for:
 #Get the websocket id of the on-going game;
@@ -78,4 +78,4 @@ def get_ws_id_from_session(request):
             return ''
 
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running utils.get_ws_id_from_session! Details: {0}'.format(e))
+        raise Exception('Unknown error while running utils.get_ws_id_from_session! Details: {0}'.format(e))

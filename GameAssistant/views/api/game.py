@@ -8,7 +8,8 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
-from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, get_user_id_from_session, get_user_name_from_session
+from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils_session import get_client_id_from_session, get_user_id_from_session, get_user_name_from_session
 from GameAssistant.libs.enums import SeatState
 
 @game_ongoing('no', 'superuser')
@@ -92,7 +93,6 @@ def get_game_infor(request):
             ret['RoomNumber'] = game.room_number
             ret['GameCode'] = game.game_code
             ret['NumberOfPlayers'] = game.num_of_players
-            ret['UserName'] = get_user_name_from_session(request) #To be removed
             ret['WsId'] = game.websocket_id()
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
