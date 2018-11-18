@@ -6,6 +6,6 @@ def message_handler(message):
     print(message['text'])
 
 websocket_urlpatterns = [
-    url(r'^ws/(?P<ws_id>[^/]+)/$', RoomConsumer),
     url(r'^test/$', TestConsumer),
+    url(r'^ws/(?P<ws_id>[^/]+)/$', RoomConsumer),
 ]

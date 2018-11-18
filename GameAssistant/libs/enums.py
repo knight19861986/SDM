@@ -7,3 +7,12 @@ class SeatState(Enum):
     superuser = 1
     subuser = 2
 
+
+@unique
+class RefreshType(Enum):
+    nothing = 0
+    username = 1
+    seat = 2
+    other_01 = 4 #For future scalability
+    other_02 = 8 #For future scalability
+

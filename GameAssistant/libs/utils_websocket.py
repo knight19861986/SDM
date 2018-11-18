@@ -14,12 +14,11 @@ def ws_push(ws_type, ws_msg):
                     ws_id = get_ws_id_from_session(request)
                     if ws_id:
                         layer = get_channel_layer()
-                        print('@@@@@@')
                         async_to_sync(layer.group_send)(
                             ws_id,
                             {
                             'type': ws_type,
-                            'message': ws_msg
+                            'message': str(ws_msg)
                             }
                         )
 

@@ -11,7 +11,7 @@ from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game
 from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, get_user_id_from_session, user_is_seated
 from GameAssistant.libs.utils_websocket import ws_push
-from GameAssistant.libs.enums import SeatState
+from GameAssistant.libs.enums import SeatState, RefreshType
 import re
 
 @check_auth('guest')
@@ -66,7 +66,7 @@ def enter(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
-@ws_push('logging', 'Refresh')
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'subuser')
 def sit(request):
     if request.method != 'POST':
@@ -96,7 +96,7 @@ def sit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.sit! Details: {0}'.format(e))
 
-@ws_push('logging', 'Refresh')
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'subuser')
 def unsit(request):
     if request.method != 'POST':
@@ -128,6 +128,7 @@ def unsit(request):
         return HttpResponseBadRequest('Unknown error while running subclient.unsit! Details: {0}'.format(e))
 
 
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'subuser')
 def edit(request):
     if request.method != 'POST':
