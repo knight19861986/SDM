@@ -1,5 +1,6 @@
+django
 mongoengine
 pymongo
-djongo 
-
-
+djongo
+channels
+channels_redis

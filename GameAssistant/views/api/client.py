@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from django.urls import reverse
 from datetime import datetime
-import re
 from django.contrib.sessions.models import Session
 from GameAssistant.models.games import Game
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
-from GameAssistant.libs.utils import check_auth, game_ongoing, get_client_id_from_session, user_is_seated
-from GameAssistant.libs.enums import SeatState
+from GameAssistant.libs.utils import check_auth, game_ongoing, user_is_seated
+from GameAssistant.libs.utils_session import get_client_id_from_session
+from GameAssistant.libs.utils_websocket import ws_push
+from GameAssistant.libs.enums import SeatState, RefreshType
+import re
 
 @check_auth('guest')
 def create(request):
@@ -105,6 +107,7 @@ def get_client(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.get_client! Details: {0}'.format(e))
 
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'superuser')
 def sit(request):
     if request.method != 'POST':
@@ -132,7 +135,8 @@ def sit(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.sit! Details: {0}'.format(e))
-    
+
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'superuser')
 def unsit(request):
     if request.method != 'POST':
@@ -162,6 +166,7 @@ def unsit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.unsit! Details: {0}'.format(e))
 
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'superuser')
 def remove(request):
     if request.method != 'POST':
@@ -189,6 +194,7 @@ def remove(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 
+@ws_push('refeshing', RefreshType.seat.value)
 @game_ongoing('yes', 'superuser')
 def rename(request):
     if request.method != 'POST':
@@ -202,7 +208,8 @@ def rename(request):
 
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.rename! Details: {0}'.format(e))
-    
+
+@ws_push('refeshing', RefreshType.seat.value+RefreshType.username.value)
 @game_ongoing('yes', 'superuser')
 def edit(request):
     if request.method != 'POST':
