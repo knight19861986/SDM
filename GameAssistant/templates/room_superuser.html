@@ -3,19 +3,19 @@
 {% block content %} 
 
 <div>
-<H1 id='headline' ALIGN="center">Room </H1>
+<H1 id='headline' ALIGN="center"><span>Room </span><span id='roomnumber'></span></H1>
 </div>
 
 <table id = 'information'>
     <tbody>
         <tr>
             <td>
-                <p id='gamecode'>Game Code: </p>
+                <p><span>Game Code: </span><span id='gamecode'></span></p>
             </td>
         </tr>
         <tr>
             <td>
-                <p id='playername'>Player: </p>
+                <p><span>Player: </span><span id='playername'></span></p>
             </td>
             <td align='right'>
                 <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:client_rename' %}" onSubmit="return editName('new_name')">{% csrf_token %}
@@ -57,13 +57,14 @@
     }
 
     $(document).ready(function(){
-        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
-            $('#headline').append(ret['RoomNumber']);
-            $('#gamecode').append(ret['GameCode']);
-            $('#playername').append(ret['UserName']);
-        });
-        var set_seats = function(){
+        function set_name(){
+            $.getJSON("{% url 'GameAssistant:game_user' %}", function(ret){
+                $('#playername').text(ret['UserName']);
+            });
+        };
+        function set_seats(){
             $.getJSON("{% url 'GameAssistant:game_seats' %}", function(ret){
+                $('#seatlistbody').empty();
                 $.each(ret, function(key,value){
                     var html_to_append = 
                         "<tr>=\n" + 
@@ -121,11 +122,33 @@
             });
         };
 
-        set_seats();
-        // setInterval(function(){
-        //     $('#seatlistbody').empty();
-        //     set_seats();
-        // }, 1000)
+        $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
+            $('#roomnumber').text(ret['RoomNumber']);
+            $('#gamecode').text(ret['GameCode']);
+            ws_id = ret['WsId'];
+            var webSocket = new WebSocket('ws://' + window.location.host +'/ws/' + ws_id + '/');
+            set_name();
+            set_seats();
+            webSocket.onmessage = function(event){
+                var data = JSON.parse(event.data);
+                var refreshType = data['message'];
+                if (isNaN(refreshType)){
+                    console.error('Invalid refresh type!');
+                }
+                else{
+                    if (refreshType & 1){
+                        set_name();
+                    }
+                    if (refreshType & 2){
+                        set_seats();
+                    }
+                }
+            }
+            webSocket.onclose = function(e) {
+                console.error('Web socket closed unexpectedly');
+            };
+
+        });
 
     });
 </script> 
