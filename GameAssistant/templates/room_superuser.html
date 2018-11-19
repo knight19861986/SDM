@@ -39,7 +39,7 @@
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
     function editName(elementId, defaultText) {
-        var newName = prompt("Please enter new name:", defaultText);
+        var newName = prompt("Please enter new name:", defaultText);//deaultText seems not working, research later
         if (newName) {
             document.getElementById(elementId).setAttribute("value", newName);
             return true;
@@ -55,6 +55,14 @@
     function removeConfirm() {
         return window.confirm("Are you sure you want to remove this player?");
     }
+    function alreadySeatedCheck(userSeated) {
+        if (Number(userSeated)) {
+            window.alert("Please cancel your current seat before your sitting on another place!");
+            return false;
+        }
+        return true;
+    }
+
 
     $(document).ready(function(){
         function set_name(){
@@ -87,7 +95,7 @@
                         if (value.SeatState == 0){
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_sit' %}\" >" +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:client_sit' %}\" onSubmit=\"return alreadySeatedCheck('" + value.UserSeated + "')\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
                             "           <input type='submit' value='Sit'> " +

@@ -8,7 +8,7 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
-from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils import check_auth, game_ongoing, user_is_seated
 from GameAssistant.libs.utils_session import get_client_id_from_session, get_user_id_from_session, get_user_name_from_session
 from GameAssistant.libs.enums import SeatState
 
@@ -57,24 +57,26 @@ def get_seats(request):
         user_id = get_user_id_from_session(request)
         if Game.objects(client_id = client_id):
             game = Game.objects(client_id = client_id).first()
+            user_seated = 1 if user_is_seated(user_id, game) else 0
             ret = []
             for seat in game.game_seats:
                 nickname = 'Waiting'
-                user_seated = False
+                user_seated_here = False
                 if seat.seat_state == SeatState.superuser.value:
                     nickname = Client.objects(client_id=seat.user_id).first().client_name
                     if client_id == user_id:
-                        user_seated = True
+                        user_seated_here = True
                 elif seat.seat_state == SeatState.subuser.value:
                     nickname = Client.objects(client_id=client_id).first().subclients.filter(subclient_id=seat.user_id).first().subclient_name
                     if user_id == seat.user_id:
-                        user_seated = True
+                        user_seated_here = True
                 ret.append({                    
                     'SeatNumber': seat.seat_number,
                     'GameCode': game.game_code,                    
                     'SeatState': seat.seat_state,
                     'NickName': nickname,
-                    'UserSeated': user_seated
+                    'UserSeated': user_seated,
+                    'UserSeatedHere': user_seated_here
                     })
 
             return JsonResponse(ret, safe=False)

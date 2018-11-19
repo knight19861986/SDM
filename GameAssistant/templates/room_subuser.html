@@ -53,6 +53,13 @@
     function leaveConfirm() {
         return window.confirm("Are you sure you want to leave this game?\nYou can come back by submitting the same game code");
     }
+    function alreadySeatedCheck(userSeated) {
+        if (Number(userSeated)) {
+            window.alert("Please cancel your current seat before your sitting on another place!");
+            return false;
+        }
+        return true;
+    }
 
     $(document).ready(function(){
         function set_name(){
@@ -72,7 +79,7 @@
                         "   <td>" + value.NickName + 
                         "   </td>";
 
-                    if (value.UserSeated){
+                    if (value.UserSeatedHere){
                             html_to_append +=
                             "   <td align='right'> " +
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\"  onSubmit=\"return cancelConfirm()\">" +'{% csrf_token %}' +
@@ -86,7 +93,7 @@
                         if (value.SeatState == 0){
                             html_to_append +=
                             "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" >" +'{% csrf_token %}' +
+                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" onSubmit=\"return alreadySeatedCheck('" + value.UserSeated + "')\">" +'{% csrf_token %}' +
                             "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
                             "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
                             "           <input type='submit' value='Sit'> " +

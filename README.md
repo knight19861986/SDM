@@ -56,7 +56,7 @@ Step 2: Intallation and initiation of MongoDB
 (See https://docs.mongodb.com/manual/mongo/#start-the-mongo-shell-and-connect-to-mongodb)
 4. Run `use testdb` to create the database we are going to use
 
-Step 3: Intallation and initiation of Redis
+Step 3: Intallation and running of Redis
 1. Install Redis:
   ```
   mkdir redis && cd redis
