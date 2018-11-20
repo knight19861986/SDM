@@ -39,7 +39,7 @@
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
     function editName(elementId, defaultText) {
-        var newName = prompt("Please enter new name:", defaultText);//deaultText seems not working, research later
+        var newName = prompt("Please enter new name:", defaultText);//defaultText seems not working, to fix later
         if (newName) {
             document.getElementById(elementId).setAttribute("value", newName);
             return true;
