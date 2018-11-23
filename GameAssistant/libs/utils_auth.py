@@ -78,8 +78,8 @@ def check_auth(auth_level):
     return _check_auth
 
 
-def game_state(state_codes, auth_level):
-    def _game_state(func):
+def check_game_state(state_codes, auth_level):
+    def _check_game_state(func):
         @check_auth(auth_level)
         def wrapper(request, *callback_args, **callback_kwargs):
             try: 
@@ -110,4 +110,4 @@ def game_state(state_codes, auth_level):
             except Exception as e:
                 return HttpResponseBadRequest('Unknown error while running utils.game_state! Details: {0}'.format(e))
         return wrapper
-    return _game_state
+    return _check_game_state
