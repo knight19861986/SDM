@@ -20,5 +20,5 @@ class Seat(EmbeddedDocument):
         ]
     }
 
-    def __unicode__(self):
+    def __str__(self):
         return self.game_code + '_' + str(self.seat_number)
