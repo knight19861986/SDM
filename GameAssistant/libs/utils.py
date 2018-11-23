@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Maybe to refactor: change "utils.py" to "utils_auth.py"
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest,HttpResponseForbidden
 from django.urls import reverse
 from GameAssistant.models.clients import Client
@@ -22,6 +21,7 @@ def decorator_example(args):
     return _decorator_example
 
 
+# To refactor: remove
 def check_auth(auth_level):
     def _check_auth(func):
         def wrapper(request, *callback_args, **callback_kwargs):
@@ -97,6 +97,7 @@ def check_auth(auth_level):
     return _check_auth
 
 
+# To refactor: remove
 def game_ongoing(yes_or_no, auth_level):
     def _game_ongoing(func):
         @check_auth(auth_level)
@@ -149,3 +150,4 @@ def user_is_seated(user_id, game):
         if seat.user_id == user_id:
             return True
     return False
+

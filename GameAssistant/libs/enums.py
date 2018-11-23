@@ -9,6 +9,16 @@ class SeatState(Enum):
 
 
 @unique
+class GameState(Enum):
+    no = 0
+    preparing = 1
+    started = 2
+    ended = 4
+    other_01 = 8 #For future scalability
+    other_02 = 16 #For future scalability
+
+
+@unique
 class RefreshType(Enum):
     nothing = 0
     username = 1

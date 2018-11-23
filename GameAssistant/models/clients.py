@@ -74,5 +74,5 @@ class Client(Document):
             return False
 
 
-    def __unicode__(self):
+    def __str__(self):
         return self.client_id

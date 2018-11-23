@@ -17,5 +17,5 @@ class SubClient(EmbeddedDocument):
         ]
     }
 
-    def __unicode__(self):
+    def __str__(self):
         return self.subclient_id
