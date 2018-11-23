@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-
 from django.http import HttpResponse,HttpResponseRedirect,HttpResponseBadRequest
 from django.urls import reverse
 from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
-from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils_precheck import check_auth, check_game_state
+from GameAssistant.libs.enums import GameState
 from django.shortcuts import render
 
-@game_ongoing('no', 'superuser')
+@check_game_state(GameState.no.value, 'superuser')
 def new(request, errorcode):
     messages = {
         '0': "Game code has already existed!",

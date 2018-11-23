@@ -14,8 +14,6 @@ class GameState(Enum):
     preparing = 1
     started = 2
     ended = 4
-    other_01 = 8 #For future scalability
-    other_02 = 16 #For future scalability
 
 
 @unique

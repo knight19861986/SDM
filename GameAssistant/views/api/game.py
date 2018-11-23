@@ -8,11 +8,12 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.models.games import Game
 from GameAssistant.models.seats import Seat
-from GameAssistant.libs.utils import check_auth, game_ongoing, user_is_seated
-from GameAssistant.libs.utils_session import get_client_id_from_session, get_user_id_from_session, get_user_name_from_session
-from GameAssistant.libs.enums import SeatState
+from GameAssistant.libs.utils import user_is_seated
+from GameAssistant.libs.utils_precheck import check_auth, check_game_state
+from GameAssistant.libs.utils_session import *
+from GameAssistant.libs.enums import GameState, SeatState
 
-@game_ongoing('no', 'superuser')
+@check_game_state(GameState.no.value, 'superuser')
 def create(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -115,7 +116,7 @@ def get_user_infor(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'superuser')
 def delete(request):
     try:
         if request.method != 'POST':

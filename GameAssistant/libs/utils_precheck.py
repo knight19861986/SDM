@@ -85,27 +85,42 @@ def check_game_state(state_codes, auth_level):
             try: 
                 sessionid = request.COOKIES.get('sessionid')
                 session = Session.objects.get(session_key=sessionid)
-                if auth_level == 'subuser':
+
+                if auth_level == 'superuser':
+                    client_id = session.get_decoded().get('client_id')
+                    if not state_codes:
+                        if Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:start_profile', args=['0'])
+                            return HttpResponseRedirect(url)
+                    else:
+                        if not Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:start_profile', args=['1'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            game = Game.objects(client_id = client_id).first()
+                            if not (game.game_state & state_codes):
+                                return HttpResponseBadRequest('Illegal request becuase of illegal game state!')
+                    return func(request, *callback_args, **callback_kwargs)
+
+                elif auth_level == 'subuser':
                     subclient_id = session.get_decoded().get('subclient_id')
                     client_id = subclient_id.split('@',1)[-1]
-                elif auth_level == 'superuser':
-                    client_id = session.get_decoded().get('client_id')
+                    if not state_codes:
+                        if Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:home_index', args=['2'])
+                            return HttpResponseRedirect(url)
+                    else:
+                        if not Game.objects(client_id = client_id):
+                            url = reverse('GameAssistant:home_index', args=['3'])
+                            return HttpResponseRedirect(url)
+                        else:
+                            game = Game.objects(client_id = client_id).first()
+                            if not (game.game_state & state_codes):
+                                return HttpResponseBadRequest('Illegal request becuase of illegal game state!')
+                    return func(request, *callback_args, **callback_kwargs)
+
                 else:
                     return HttpResponseBadRequest('Illegal request becuase of illegal authentication level!')
-
-                if not state_codes:
-                    if Game.objects(client_id = client_id):
-                        url = reverse('GameAssistant:start_profile', args=['0'])
-                        return HttpResponseRedirect(url)                            
-                else:
-                    if not Game.objects(client_id = client_id):
-                        url = reverse('GameAssistant:start_profile', args=['1'])
-                        return HttpResponseRedirect(url)
-                    else:
-                        game = Game.objects(client_id = client_id).first()
-                        if not (game.game_state & state_codes):
-                            return HttpResponseBadRequest('Illegal request becuase of illegal game state!')
-                return func(request, *callback_args, **callback_kwargs)
 
             except Exception as e:
                 return HttpResponseBadRequest('Unknown error while running utils.game_state! Details: {0}'.format(e))

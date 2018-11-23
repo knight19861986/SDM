@@ -6,10 +6,11 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.games import Game
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
-from GameAssistant.libs.utils import check_auth, game_ongoing, user_is_seated
+from GameAssistant.libs.utils import user_is_seated
+from GameAssistant.libs.utils_precheck import check_auth, check_game_state
 from GameAssistant.libs.utils_session import get_client_id_from_session
 from GameAssistant.libs.utils_websocket import ws_push
-from GameAssistant.libs.enums import SeatState, RefreshType
+from GameAssistant.libs.enums import GameState, SeatState, RefreshType
 import re
 
 @check_auth('guest')
@@ -37,7 +38,7 @@ def create(request):
         client = Client(client_id = client_id, client_name = client_name, pin = pin)
         client.save()
 
-        # response = '<script>alert(\'Succeed to send!\')</script>'
+        # response = '<script>alert(\'Succeed!\')</script>'
         # return HttpResponse(response)
         url = reverse('GameAssistant:sign_up_succces')
         return HttpResponseRedirect(url)
@@ -108,7 +109,7 @@ def get_client(request):
         return HttpResponseBadRequest('Unknown error while running client.get_client! Details: {0}'.format(e))
 
 @ws_push('refeshing', RefreshType.seat.value)
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value, 'superuser')
 def sit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -137,7 +138,7 @@ def sit(request):
         return HttpResponseBadRequest('Unknown error while running client.sit! Details: {0}'.format(e))
 
 @ws_push('refeshing', RefreshType.seat.value)
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value, 'superuser')
 def unsit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -167,7 +168,7 @@ def unsit(request):
         return HttpResponseBadRequest('Unknown error while running client.unsit! Details: {0}'.format(e))
 
 @ws_push('refeshing', RefreshType.seat.value)
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value, 'superuser')
 def remove(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -195,7 +196,7 @@ def remove(request):
         return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 
 @ws_push('refeshing', RefreshType.seat.value)
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value, 'superuser')
 def rename(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -210,7 +211,7 @@ def rename(request):
         return HttpResponseBadRequest('Unknown error while running client.rename! Details: {0}'.format(e))
 
 @ws_push('refeshing', RefreshType.seat.value+RefreshType.username.value)
-@game_ongoing('yes', 'superuser')
+@check_game_state(GameState.preparing.value, 'superuser')
 def edit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
