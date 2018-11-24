@@ -40,5 +40,12 @@ class Game(Document):
         except:
             return False
 
+    def is_ready(self):
+        for seat in self.game_seats:
+            if not seat.seat_state:
+                return False
+        return True
+
+
     def __str__(self):
         return self.game_code
