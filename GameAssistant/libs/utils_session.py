@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseBadRequest
-from GameAssistant.libs.utils import check_auth, game_ongoing
+from GameAssistant.libs.utils_precheck import check_auth
 from GameAssistant.models.clients import Client
 from GameAssistant.models.subclients import SubClient
 from GameAssistant.models.games import Game

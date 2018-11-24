@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from GameAssistant.libs.utils import check_auth
+from GameAssistant.libs.utils_precheck import check_auth
 from django.shortcuts import render
 
 @check_auth('guest')
