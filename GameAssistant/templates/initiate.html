@@ -8,11 +8,20 @@
 <div>
 <form name="form_intitiate_game" method="post" action="{% url 'GameAssistant:game_create' %}" onSubmit="return gameFieldsCheck()">{% csrf_token %}
     <table border="0">
-        <tbody>
+        <tbody id="body_intitiate_game">
+            <tr>
+                <td><span>Game: </span></td>
+                <td><span id='boardname'></span></td>
+                <td><input type="hidden" name="board_name" value="{{ board_name }}"></td>
+            </tr>
             <tr>
                 <div style="color:#E74C3C">
                     {{ error_msg }}
                 </div>
+            </tr>
+            <tr>
+                <td style="vertical-align:top">Game Code:</td>
+                <td><input type="text" name="game_code"></td>
             </tr>
             <tr>
                 <td style="vertical-align:top">Num of players:</td>
@@ -25,13 +34,26 @@
                         }
                         </script>
                     </select>
-
                 </td>
-
+            </tr>
+            <tr><td style="vertical-align:top">Roles Configuration:</td></tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <table border="0">
+                        <tbody id="body_multiple_roles" />
+                    </table>
+                </td>
             </tr>
             <tr>
-                <td style="vertical-align:top">Game Code:</td>
-                <td><input type="text" name="game_code"></td>
+                <td>
+                </td>
+                <td>
+                    <table border="0">
+                        <tbody id="body_single_roles" />
+                    </table>
+                </td>
             </tr>
             <tr>
                 <td>
@@ -43,7 +65,7 @@
     </table>
 </form>
 <br>
-<form name="button_profile" method="post" action="{% url 'GameAssistant:start_profile' '' %}">{% csrf_token %}
+<form name="button_profile" action="{% url 'GameAssistant:start_profile' '' %}">
     <input type="submit" value="Profile">
 </form>
 <br>
@@ -51,6 +73,7 @@
     <input type="submit" value="Logout">
 </form>
 
+<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
     function gameFieldsCheck() {
         if (document.form_intitiate_game.game_code.value === "") {
@@ -59,6 +82,49 @@
         }
         return true;
     }
+
+    $(document).ready(function(){
+        boardname = '{{ board_name }}';
+        $('#boardname').text(boardname.toUpperCase());
+        boardurl = '/gameassistant/board/ajax_' + boardname.toLowerCase();
+
+        $.getJSON(boardurl, function(ret){
+            $.each(ret, function(key,value){
+                if(value.Maximum == 1){
+                    var html_to_append = 
+                        "<tr>=" + 
+                        "   <td>" + value.RoleName + ":" +
+                        "   </td>" + 
+                        "   <td>" +
+                        "       <input type='checkbox' name=\'" + value.RoleName + "\' id=\'" + value.RoleName + "\'>" +
+                        "   </td>" + 
+                        "</tr>";
+                    $('#body_single_roles').append(html_to_append);
+                }
+                else
+                    if (value.Maximum > 1){
+                        var html_to_append =
+                            "<tr>=" + 
+                            "   <td>" + value.RoleName + ":" +
+                            "   </td>" + 
+                            "   <td>" +
+                            "       <select name=\'" + value.RoleName + "\' id=\'" + value.RoleName + "\'>";
+
+                        for(var d=0;d<=value.Maximum;d++)
+                        {
+                            html_to_append += 
+                            "           <option>"+d+"</option>";
+                        }
+                            
+                        html_to_append +=
+                            "   </td>" +
+                            "</tr>";
+                        $('#body_multiple_roles').append(html_to_append);
+                    }
+
+            });
+        })
+    });
 
 </script> 
 

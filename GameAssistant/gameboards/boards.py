@@ -2,9 +2,10 @@
 import random
 
 class Role(object):
-    def __init__(self, name, description):
+    def __init__(self, name, description, maximum=1):
         self.name = name
         self.description = description
+        self.maximum = maximum
 
     def __str__(self):
         return self.name
@@ -15,9 +16,18 @@ class Board(object):
     # roles = []
     def __init__(self, role_dict={}):
         self.role_dict = role_dict
+        self.role_index = {}
+        for role in self.roles:
+            role_index[role.name] = role
+
+    def get_description(role_name):
+        return role_index[role_name].description
+
+    def get_maximum(role_name):
+        return role_index[role_name].maximum
 
     def deal(self):
-        res = []        
+        res = []
         for key, value in self.role_dict.items():
             if key in [role.name for role in self.roles]:
                 role_name = key

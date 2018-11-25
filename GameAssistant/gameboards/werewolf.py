@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from board import Role, Board
+from GameAssistant.gameboards.boards import Role, Board
 
 class Werewolf(Board):
     name = 'Werewolf'
     roles = [
         Role('Moderator','The game of Mafia is run by a moderator, who does not participate as a player'),
 
-        Role('Odinary Townfolk','Odinary Townfolks don\'t have any special power except thinking and the right to vote.'),
+        Role('Odinary Townfolk','Odinary Townfolks don\'t have any special power except thinking and the right to vote.',6),
 
         Role('Seer','Each night, they can discover the real identity of a player. '),
         Role('Hunter','If they are killed by werewolves or eliminated by vote, they must immediately kill another player of their choice.'),
@@ -19,7 +19,7 @@ class Werewolf(Board):
         Role('Nine-Tailed Fox',''),
         Role('Magician',''),
 
-        Role('Werewolf','Each night, the werewolves pick 1 player to kill.'),
+        Role('Werewolf','Each night, the werewolves pick 1 player to kill.',6),
         Role('Werewolf Beauty',''),
         Role('White Werewolf',''),
         Role('Werewolf King',''),
@@ -30,16 +30,3 @@ class Werewolf(Board):
 
     ]
 
-
-def test():
-    print(Werewolf({
-    	'Werewolf':4, 
-    	'Odinary Townfolk':4, 
-    	'Seer':1,
-    	'Hunter':1, 
-    	'Witch':1, 
-    	'Idiot':1
-    	}).deal())
-
-if __name__ == "__main__":
-    test()

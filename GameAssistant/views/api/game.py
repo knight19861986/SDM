@@ -20,12 +20,13 @@ def create(request):
 
     try:
         game_code = request.POST.get('game_code')
+        board_name = request.POST.get('board_name')
 
         if not re.match("^[A-Za-z0-9]*$", game_code):
-            url = reverse('GameAssistant:start_new', args=[1])
+            url = reverse('GameAssistant:start_new', args=[board_name, 1])
             return HttpResponseRedirect(url)
         if Game.objects(game_code = game_code):
-            url = reverse('GameAssistant:start_new', args=[0])
+            url = reverse('GameAssistant:start_new', args=[board_name, 0])
             return HttpResponseRedirect(url)
 
         num_of_players = request.POST.get('num_of_players')
@@ -71,9 +72,9 @@ def get_seats(request):
                     nickname = Client.objects(client_id=client_id).first().subclients.filter(subclient_id=seat.user_id).first().subclient_name
                     if user_id == seat.user_id:
                         user_seated_here = True
-                ret.append({                    
+                ret.append({
                     'SeatNumber': seat.seat_number,
-                    'GameCode': game.game_code,                    
+                    'GameCode': game.game_code,
                     'SeatState': seat.seat_state,
                     'NickName': nickname,
                     'UserSeated': user_seated,

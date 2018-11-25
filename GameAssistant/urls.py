@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
 from GameAssistant.views.sites import home, start, going
-from GameAssistant.views.api import client, subclient, game
+from GameAssistant.views.api import board, client, subclient, game
 
 app_name =  "GameAssistant"
 urlpatterns = [
@@ -14,12 +14,17 @@ urlpatterns = [
     url(r'^sign-in/((?P<errorcode>\d)|)$', home.sign_in, name='sign_in'),
 
     ################ Start #################
-    url(r'^new/((?P<errorcode>\d)|)$', start.new, name='start_new'),
+    url(r'^new/((?P<boardname>\w+)|)/((?P<errorcode>\d)|)$', start.new, name='start_new'),
     url(r'^profile/((?P<errorcode>\d)|)$', start.profile, name='start_profile'),
 
     ############### Going ##################
     url(r'^room/$', going.room, name='going_room'),
     url(r'^room-guest/$', going.room_guest, name='going_room_guest'),
+
+    ################ Board #################
+    url(r'^board/ajax_boards/$', board.get_board_list, name='board_list'),
+    url(r'^board/ajax_mafia/$', board.get_mafia_roles, name='mafia_roles'),
+    url(r'^board/ajax_werewolf/$', board.get_werewolf_roles, name='werewolf_roles'),
 
     ############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),

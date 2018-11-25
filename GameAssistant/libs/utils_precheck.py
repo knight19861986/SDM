@@ -17,11 +17,9 @@ def check_auth(auth_level):
                         session = Session.objects.get(session_key=sessionid)
                         if session and session.get_decoded().get('client_id'):
                             return func(request, *callback_args, **callback_kwargs)
-                        else:
-                            return HttpResponseForbidden('Session of superuser not existed! Please sign in again!')
-                    else:
-                        url = reverse('GameAssistant:home_index', args=[''])
-                        return HttpResponseRedirect(url)
+
+                    url = reverse('GameAssistant:home_index', args=[''])
+                    return HttpResponseRedirect(url)
 
                 elif auth_level == 'subuser':
                     if 'sessionid' in request.COOKIES:
@@ -44,11 +42,9 @@ def check_auth(auth_level):
                             else:
                                 url = reverse('GameAssistant:home_index', args=['4'])
                                 return HttpResponseRedirect(url)
-                        return HttpResponseForbidden('Session of subuser expired! Please join a game again!')
 
-                    else:
-                        url = reverse('GameAssistant:home_index', args=[''])
-                        return HttpResponseRedirect(url)
+                    url = reverse('GameAssistant:home_index', args=[''])
+                    return HttpResponseRedirect(url)
 
                 elif auth_level == 'user':
                     if 'sessionid' in request.COOKIES:
@@ -57,10 +53,9 @@ def check_auth(auth_level):
                         if session:
                             if session.get_decoded().get('client_id') or session.get_decoded().get('subclient_id'):
                                 return func(request, *callback_args, **callback_kwargs)
-                        return HttpResponseForbidden('Session not existed!')
-                    else:
-                        url = reverse('GameAssistant:home_index', args=[''])
-                        return HttpResponseRedirect(url)
+
+                    url = reverse('GameAssistant:home_index', args=[''])
+                    return HttpResponseRedirect(url)
 
                 elif auth_level == 'guest':
                     if 'sessionid' in request.COOKIES:
