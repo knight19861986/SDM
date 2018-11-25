@@ -14,29 +14,24 @@ def get_board_list(request):
         return HttpResponseBadRequest('Unknown error while running game.get_board_list! Details: {0}'.format(e))
 
 @check_auth('user')
-def get_mafia_roles(request):
+def get_board_roles(request, boardname):
     try:
         ret = []
-        for role in Mafia.roles:
-            ret.append({
-                'RoleName': role.name,
-                'Description': role.description,
-                'Maximum': role.maximum,
-                })
-        return JsonResponse(ret, safe=False)
+        print(boardname)
+        if boardname in get_board_name_list():
+            if boardname == "Mafia":
+                Board = Mafia
+            elif boardname == "Werewolf":
+                Board = Werewolf
+            else:
+                return HttpResponseBadRequest('Board not existed!')
+            for role in Board.roles:
+                ret.append({
+                    'RoleName': role.name,
+                    'Description': role.description,
+                    'Maximum': role.maximum,
+                    })
+            return JsonResponse(ret, safe=False)
+        return HttpResponseBadRequest('Illegal board name!')
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running game.get_mafia_roles! Details: {0}'.format(e))
-
-@check_auth('user')
-def get_werewolf_roles(request):
-    try:
-        ret = []
-        for role in Werewolf.roles:
-            ret.append({
-                'RoleName': role.name,
-                'Description': role.description,
-                'Maximum': role.maximum,
-                })
-        return JsonResponse(ret, safe=False)
-    except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running game.get_werewolf_roles! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running game.get_board_roles! Details: {0}'.format(e))

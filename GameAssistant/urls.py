@@ -23,8 +23,7 @@ urlpatterns = [
 
     ################ Board #################
     url(r'^board/ajax_boards/$', board.get_board_list, name='board_list'),
-    url(r'^board/ajax_mafia/$', board.get_mafia_roles, name='mafia_roles'),
-    url(r'^board/ajax_werewolf/$', board.get_werewolf_roles, name='werewolf_roles'),
+    url(r'^board/ajax_roles/((?P<boardname>\w+)|)$', board.get_board_roles, name='board_roles'),
 
     ############### Client #################
     url(r'^client/create/$', client.create, name='client_create'),

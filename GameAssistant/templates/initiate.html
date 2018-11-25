@@ -11,7 +11,7 @@
         <tbody id="body_intitiate_game">
             <tr>
                 <td><span>Game: </span></td>
-                <td><span id='boardname'></span></td>
+                <td><span id='boardname'>{{ board_name }}</span></td>
                 <td><input type="hidden" name="board_name" value="{{ board_name }}"></td>
             </tr>
             <tr>
@@ -84,9 +84,7 @@
     }
 
     $(document).ready(function(){
-        boardname = '{{ board_name }}';
-        $('#boardname').text(boardname.toUpperCase());
-        boardurl = '/gameassistant/board/ajax_' + boardname.toLowerCase();
+        boardurl = '/gameassistant/board/ajax_roles/' + '{{ board_name }}';
 
         $.getJSON(boardurl, function(ret){
             $.each(ret, function(key,value){
@@ -117,6 +115,7 @@
                         }
                             
                         html_to_append +=
+                            "       </select>"
                             "   </td>" +
                             "</tr>";
                         $('#body_multiple_roles').append(html_to_append);

@@ -6,6 +6,7 @@ from django.contrib.sessions.models import Session
 from GameAssistant.models.clients import Client
 from GameAssistant.libs.utils_board import get_board_name_list
 from GameAssistant.libs.utils_precheck import check_auth, check_game_state
+from GameAssistant.libs.utils_board import get_board_name_list
 from GameAssistant.libs.enums import GameState
 from GameAssistant.gameboards.mafia import Mafia
 from GameAssistant.gameboards.werewolf import Werewolf
@@ -17,7 +18,7 @@ def new(request, boardname, errorcode):
         '0': "Game code has already existed!",
         '1': "Illegal game code!"
     }
-    if not boardname:
+    if boardname not in get_board_name_list():
         url = reverse('GameAssistant:start_profile', args=[''])
         return HttpResponseRedirect(url)
     if errorcode in messages:

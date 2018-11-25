@@ -18,13 +18,13 @@ class Board(object):
         self.role_dict = role_dict
         self.role_index = {}
         for role in self.roles:
-            role_index[role.name] = role
+            self.role_index[role.name] = role
 
-    def get_description(role_name):
-        return role_index[role_name].description
+    def get_description(self, role_name):
+        return self.role_index[role_name].description
 
-    def get_maximum(role_name):
-        return role_index[role_name].maximum
+    def get_maximum(self, role_name):
+        return self.role_index[role_name].maximum
 
     def deal(self):
         res = []
