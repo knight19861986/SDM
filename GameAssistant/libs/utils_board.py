@@ -10,3 +10,15 @@ def get_board_name_list():
     # ret.append(Avalon.name)
     ret.append("Avalon")
     return ret
+
+def board_selector(boardname):
+    if boardname in get_board_name_list():
+            if boardname == 'Mafia':
+                return Mafia
+            elif boardname == 'Werewolf':
+                return Werewolf
+    raise Exception('Unknown board name!')
+
+def board_factory(boardname, role_dict={}):
+    Board = board_selector(boardname)
+    return Board(role_dict)
