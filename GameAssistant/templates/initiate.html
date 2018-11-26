@@ -26,7 +26,7 @@
             <tr>
                 <td style="vertical-align:top">Num of players:</td>
                 <td>
-                    <select name="num_of_players">
+                    <select name="num_of_players" id="num_of_players">
                         <script language="javascript" type="text/javascript">
                         for(var d=4;d<=16;d++)
                         {
@@ -75,17 +75,37 @@
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
+    boardurl = '/gameassistant/board/ajax_roles/' + '{{ board_name }}';
+    function num_of_roles() {
+        var res = 0;
+        var inputs = document.getElementsByTagName('input');
+        for(var i=0; i<inputs.length; i++) {
+            if (inputs[i].getAttribute('type') == 'checkbox')
+                if (inputs[i].checked)
+                    res++;
+        }
+        var selects = document.getElementsByTagName('select');
+        for(var i=0; i<selects.length; i++)
+            res += Number(selects[i].value);
+
+        var num_of_players = document.form_intitiate_game.num_of_players.value;
+        res -= num_of_players;
+        return Number(res);
+    }
+
     function gameFieldsCheck() {
         if (document.form_intitiate_game.game_code.value === "") {
             window.alert("The game code is empty!");
+            return false;
+        }
+        if (Number(document.form_intitiate_game.num_of_players.value) !== num_of_roles()) {
+            window.alert("Num of players is not the same with the number of roles!");
             return false;
         }
         return true;
     }
 
     $(document).ready(function(){
-        boardurl = '/gameassistant/board/ajax_roles/' + '{{ board_name }}';
-
         $.getJSON(boardurl, function(ret){
             $.each(ret, function(key,value){
                 if(value.Maximum == 1){
@@ -94,7 +114,7 @@
                         "   <td>" + value.RoleName + ":" +
                         "   </td>" + 
                         "   <td>" +
-                        "       <input type='checkbox' name=\'" + value.RoleName + "\' id=\'" + value.RoleName + "\'>" +
+                        "       <input type='checkbox' name=\'" + value.RoleName + "\' id=\'" + value.RoleName + "\' value=1>" +
                         "   </td>" + 
                         "</tr>";
                     $('#body_single_roles').append(html_to_append);

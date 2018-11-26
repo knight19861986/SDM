@@ -29,7 +29,7 @@ class Board(object):
     def deal(self):
         res = []
         for key, value in self.role_dict.items():
-            if key in [role.name for role in self.roles]:
+            if key in self.role_index:
                 role_name = key
             else: 
                 role_name = 'Unknown'

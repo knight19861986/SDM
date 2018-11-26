@@ -17,7 +17,6 @@ def get_board_list(request):
 def get_board_roles(request, boardname):
     try:
         ret = []
-        print(boardname)
         if boardname in get_board_name_list():
             if boardname == "Mafia":
                 Board = Mafia

@@ -21,6 +21,7 @@ def create(request):
     try:
         game_code = request.POST.get('game_code')
         board_name = request.POST.get('board_name')
+        print(request.POST)
 
         if not re.match("^[A-Za-z0-9]*$", game_code):
             url = reverse('GameAssistant:start_new', args=[board_name, 1])
