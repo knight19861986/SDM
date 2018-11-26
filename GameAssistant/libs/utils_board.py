@@ -8,7 +8,6 @@ def get_board_name_list():
     ret.append(Mafia.name)
     ret.append(Werewolf.name)
     # ret.append(Avalon.name)
-    ret.append("Avalon")
     return ret
 
 def board_selector(boardname):
