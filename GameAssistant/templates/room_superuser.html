@@ -135,8 +135,10 @@
             $('#gamecode').text(ret['GameCode']);
             ws_id = ret['WsId'];
             var webSocket = new WebSocket('ws://' + window.location.host +'/ws/' + ws_id + '/');
-            set_name();
-            set_seats();
+            webSocket.onopen = function(event){
+                set_name();
+                set_seats();
+            }
             webSocket.onmessage = function(event){
                 var data = JSON.parse(event.data);
                 var refreshType = data['message'];
@@ -152,12 +154,19 @@
                     }
                 }
             }
-            webSocket.onclose = function(e) {
+            webSocket.onclose = function(event) {
                 console.error('Web socket closed unexpectedly');
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
             };
-
+            webSocket.onerror = function(event) {
+                console.error("Web socket error: " + event.data);
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            };
         });
-
     });
 </script> 
 
