@@ -16,7 +16,8 @@ from GameAssistant.gameboards.werewolf import Werewolf
 def new(request, boardname, errorcode):
     messages = {
         '0': "Game code has already existed!",
-        '1': "Illegal game code!"
+        '1': "Illegal game code!",
+        '2': "Num of players is not the same as the number of roles!"
     }
     if boardname not in get_board_name_list():
         url = reverse('GameAssistant:start_profile', args=[''])

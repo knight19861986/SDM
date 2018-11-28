@@ -11,6 +11,7 @@ from GameAssistant.models.seats import Seat
 from GameAssistant.libs.utils import user_is_seated
 from GameAssistant.libs.utils_precheck import check_auth, check_game_state
 from GameAssistant.libs.utils_session import *
+from GameAssistant.libs.utils_board import *
 from GameAssistant.libs.enums import GameState, SeatState
 
 @check_game_state(GameState.no.value, 'superuser')
@@ -21,7 +22,6 @@ def create(request):
     try:
         game_code = request.POST.get('game_code')
         board_name = request.POST.get('board_name')
-        print(request.POST)
 
         if not re.match("^[A-Za-z0-9]*$", game_code):
             url = reverse('GameAssistant:start_new', args=[board_name, 1])
@@ -30,19 +30,31 @@ def create(request):
             url = reverse('GameAssistant:start_new', args=[board_name, 0])
             return HttpResponseRedirect(url)
 
-        num_of_players = request.POST.get('num_of_players')
+        num_of_players = int(request.POST.get('num_of_players'))
+        board_name = request.POST.get('board_name')
+        board = board_factory(board_name)
+        role_dict={}
+        for key,value in request.POST.items():
+            if key in board.role_index:
+                role_dict[key] = int(value)
+
+        board.set_role_dict(role_dict)
+        role_list = board.deal()
+
+        if len(role_list) != num_of_players:
+            url = reverse('GameAssistant:start_new', args=[board_name, 2])
+            return HttpResponseRedirect(url)
 
         client_id = get_client_id_from_session(request)
-
         room_number = 0
         while True:
             room_number += 1
             if not Game.objects(room_number=room_number):
                 break
 
-        game = Game(client_id=client_id, room_number=room_number, game_code=game_code, num_of_players=num_of_players)
-        for number in range(1, game.num_of_players+1):
-            seat = Seat(seat_number=number, game_code=game_code)
+        game = Game(client_id=client_id, room_number=room_number, board_name=board_name, game_code=game_code, num_of_players=num_of_players)
+        for number in range(0, game.num_of_players):
+            seat = Seat(seat_number=number+1, game_code=game_code, role=role_list[number])
             game.game_seats.append(seat)
         game.save()
     

@@ -20,6 +20,9 @@ class Board(object):
         for role in self.roles:
             self.role_index[role.name] = role
 
+    def set_role_dict(self, role_dict):
+        self.role_dict = role_dict
+
     def get_description(self, role_name):
         return self.role_index[role_name].description
 
