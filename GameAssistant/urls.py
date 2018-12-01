@@ -42,7 +42,6 @@ urlpatterns = [
     url(r'^subclient/unsit/$', subclient.unsit, name='subclient_unsit'),
     url(r'^subclient/edit/$', subclient.edit, name='subclient_edit'),
 
-
     ############### Game ###################
     url(r'^game/create/$', game.create, name='game_create'),
     url(r'^game/start/$', game.start, name='game_start'),
