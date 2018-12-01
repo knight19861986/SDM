@@ -68,7 +68,7 @@ def enter(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.enter! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value)
 @check_game_state(GameState.preparing.value, 'subuser')
 def sit(request):
     if request.method != 'POST':
@@ -98,7 +98,7 @@ def sit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running subclient.sit! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value)
 @check_game_state(GameState.preparing.value, 'subuser')
 def unsit(request):
     if request.method != 'POST':
@@ -130,8 +130,8 @@ def unsit(request):
         return HttpResponseBadRequest('Unknown error while running subclient.unsit! Details: {0}'.format(e))
 
 
-@ws_push('refeshing', RefreshType.seat.value)
-@check_game_state(GameState.preparing.value, 'subuser')
+@ws_push('refreshing', RefreshType.seat.value)
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'subuser')
 def edit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')

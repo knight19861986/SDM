@@ -10,18 +10,26 @@
     <tbody>
         <tr>
             <td>
-                <p><span>Game Code: </span><span id='gamecode'></span></p>
+                <p><span>Game: </span><span id='boardname'></span></p>
             </td>
         </tr>
         <tr>
             <td>
-                <p><span>Player: </span><span id='playername'></span></p>
+                <span>Player: </span><span id='playername'></span>
             </td>
             <td align='right'>
                 <form id="button_edit_name" name="button_edit_name" method="post" action="{% url 'GameAssistant:subclient_edit' %}" onSubmit="return editName('new_name')">{% csrf_token %}
                     <input type="hidden" id='new_name' name='new_name'>
                     <input type="submit" value="Edit Name">
                 </form>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p><button id='button_gamecode'>Game Code</button></p>
+            </td>
+            <td>
+                <p><button id='button_role' disabled>Your Role</button></p>
             </td>
         </tr>
     </tbody>
@@ -31,11 +39,9 @@
     <tbody id = 'seatlistbody' />
 </table>
 
-<br>
 <form name="button_leave" action="{% url 'GameAssistant:home_index' '' %}" onSubmit="return leaveConfirm()">
-    <input type="submit" value="LeaveGame"/>
+    <p><input type="submit" value="Leave Game"/></p>
 </form>   
-
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
@@ -46,6 +52,19 @@
             return true;
             }
         return false;
+    }
+    function showGameCode(gameCode) {
+        msg = "The game code is: \n";
+        msg += gameCode;
+        msg += "\nTell the code to your friends for entering this room!";
+        window.alert(msg);
+    }
+    function showRole(role, description) {
+        msg = "Your role is: \n";
+        msg += role;
+        if(description)
+            msg += "\n" + description;
+        window.alert(msg);
     }
     function cancelConfirm() {
         return window.confirm("Are you sure you want to cancel sitting here?");
@@ -79,7 +98,8 @@
                         "   <td>" + value.NickName + 
                         "   </td>";
 
-                    if (value.UserSeatedHere){
+                    if (value.GameState == 1){
+                        if (value.UserSeatedHere){
                             html_to_append +=
                             "   <td align='right'> " +
                             "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_unsit' %}\"  onSubmit=\"return cancelConfirm()\">" +'{% csrf_token %}' +
@@ -89,18 +109,25 @@
                             "       </form>" +
                             "   </td>";
                         }
-                    else                
-                        if (value.SeatState == 0){
+                        else                
+                            if (value.SeatState == 0){
+                                html_to_append +=
+                                "   <td align='right'> " +
+                                "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" onSubmit=\"return alreadySeatedCheck('" + value.UserSeated + "')\">" +'{% csrf_token %}' +
+                                "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
+                                "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
+                                "           <input type='submit' value='Sit'> " +
+                                "       </form>" +
+                                "   </td>";
+                            }
+                    }
+                    else
+                        if  (value.GameState == 4){
                             html_to_append +=
-                            "   <td align='right'> " +
-                            "       <form name='button_end' method='post' action=\"{% url 'GameAssistant:subclient_sit' %}\" onSubmit=\"return alreadySeatedCheck('" + value.UserSeated + "')\">" +'{% csrf_token %}' +
-                            "           <input type='hidden' name='game_code' value=" +value.GameCode + ">" +
-                            "           <input type='hidden' name='seat_number' value=" +value.SeatNumber + ">" +
-                            "           <input type='submit' value='Sit'> " +
-                            "       </form>" +
+                            "   <td align='left'>" + " #" + value.Role +
                             "   </td>";
                         }
-                    
+
                     html_to_append += "</tr>";
                     
                     $('#seatlistbody').append(html_to_append);
@@ -108,14 +135,25 @@
             });
         };
 
+        function enable_role(){
+            $.getJSON("{% url 'GameAssistant:game_user' %}", function(ret){
+                if (ret['GameState'] & 6){
+                    $('#button_role').attr( "onclick", "showRole('" + ret['Role'] + "', '" + ret['Description'] +"')");
+                    $('#button_role').removeAttr("disabled");
+                }
+            });
+        };
+
         $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
             $('#roomnumber').text(ret['RoomNumber']);
-            $('#gamecode').text(ret['GameCode']);
+            $('#boardname').text(ret['BoardName']);
+            $('#button_gamecode').attr( "onClick", "showGameCode(" + ret['GameCode'] + ")");
             ws_id = ret['WsId'];
             var webSocket = new WebSocket('ws://' + window.location.host +'/ws/' + ws_id + '/');
             webSocket.onopen = function(event){
                 set_name();
                 set_seats();
+                enable_role();
             }
             webSocket.onmessage = function(event){
                 var data = JSON.parse(event.data);
@@ -125,10 +163,24 @@
                 }
                 else{
                     if (refreshType & 1){
+                        console.log("refreshType & 1");
+                        console.log(ret['GameState']);
                         set_name();
                     }
                     if (refreshType & 2){
+                        console.log("refreshType & 2");
+                        console.log(ret['GameState']);
                         set_seats();
+                    }
+                    if (refreshType & 4){
+                        console.log("refreshType & 4");
+                        console.log(ret['GameState']);
+                        enable_role();
+                    }
+                    if (refreshType & 8){
+                        console.log("refreshType & 8");
+                        console.log(ret['GameState']);
+                        window.location.reload();
                     }
                 }
             }
@@ -146,7 +198,6 @@
             };
         });
     });
-</script> 
-
+</script>
 
 {% endblock %}

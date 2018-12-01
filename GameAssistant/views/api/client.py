@@ -108,7 +108,7 @@ def get_client(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.get_client! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value)
 @check_game_state(GameState.preparing.value, 'superuser')
 def sit(request):
     if request.method != 'POST':
@@ -137,7 +137,7 @@ def sit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.sit! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value)
 @check_game_state(GameState.preparing.value, 'superuser')
 def unsit(request):
     if request.method != 'POST':
@@ -167,7 +167,7 @@ def unsit(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.unsit! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value)
 @check_game_state(GameState.preparing.value, 'superuser')
 def remove(request):
     if request.method != 'POST':
@@ -195,8 +195,8 @@ def remove(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.remove! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value)
-@check_game_state(GameState.preparing.value, 'superuser')
+@ws_push('refreshing', RefreshType.seat.value)
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'superuser')
 def rename(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')
@@ -210,8 +210,8 @@ def rename(request):
     except Exception as e:
         return HttpResponseBadRequest('Unknown error while running client.rename! Details: {0}'.format(e))
 
-@ws_push('refeshing', RefreshType.seat.value+RefreshType.username.value)
-@check_game_state(GameState.preparing.value, 'superuser')
+@ws_push('refreshing', RefreshType.seat.value+RefreshType.username.value)
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'superuser')
 def edit(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Only POST are allowed!')

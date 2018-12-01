@@ -45,6 +45,8 @@ urlpatterns = [
 
     ############### Game ###################
     url(r'^game/create/$', game.create, name='game_create'),
+    url(r'^game/start/$', game.start, name='game_start'),
+    url(r'^game/end/$', game.end, name='game_end'),
     url(r'^game/delete/$', game.delete, name='game_delete'),
     url(r'^game/ajax_game_information/$', game.get_game_infor, name='game_information'),
     url(r'^game/ajax_user_information/$', game.get_user_infor, name='game_user'),

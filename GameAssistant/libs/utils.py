@@ -30,3 +30,11 @@ def user_is_seated(user_id, game):
             return True
     return False
 
+
+#Works for both super_user and sub_user
+def get_user_role(user_id, game):
+    for seat in game.game_seats:
+        if seat.user_id == user_id:
+            return seat.role
+    return 'Unknown'
+

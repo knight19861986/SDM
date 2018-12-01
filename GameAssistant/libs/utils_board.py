@@ -18,6 +18,6 @@ def board_selector(boardname):
                 return Werewolf
     raise Exception('Unknown board name!')
 
-def board_factory(boardname, role_dict={}):
+def board_factory(boardname, role_config={}):
     Board = board_selector(boardname)
-    return Board(role_dict)
+    return Board(role_config)

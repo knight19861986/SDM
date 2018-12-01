@@ -9,7 +9,7 @@ class Game(Document):
     client_id = StringField(max_length = 200, required=True)
     room_number = IntField(default = 0)
     game_code = StringField(max_length = 200, required=True)
-    board_name = StringField(max_length = 200, default = "", required=True)
+    board_name = StringField(max_length = 200, required=True)
     game_state = IntField(default = GameState.preparing.value)
     num_of_players = IntField(default = 4, required=True)
     time_created = DateTimeField(default = datetime.now)

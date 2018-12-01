@@ -32,7 +32,7 @@ def new(request, boardname, errorcode):
 @check_auth('superuser')
 def profile(request, errorcode):
     messages = {
-        '0': "You have already started a game!\nPlease close the previous game before you start a new one!",
+        '0': "You have already created a game!\nPlease delete the previous game before you start a new one!",
         '1': "You don't have an on-going game!\nPlease create a new one!"
     }
     if errorcode in messages:

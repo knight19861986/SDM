@@ -8,12 +8,12 @@ from GameAssistant.models.games import Game
 from GameAssistant.libs.utils_precheck import check_game_state
 from GameAssistant.libs.enums import GameState
 
-@check_game_state(GameState.preparing.value, 'superuser')
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'superuser')
 def room(request):
     return render(request, "room_superuser.html")
 
 
-@check_game_state(GameState.preparing.value, 'subuser')
+@check_game_state(GameState.preparing.value+GameState.started.value+GameState.ended.value, 'subuser')
 def room_guest(request):
     return render(request, "room_subuser.html")
 

@@ -15,8 +15,7 @@ class Seat(EmbeddedDocument):
 
     meta = {
         'indexes': [
-            'game_code',
-            'subuser_id'
+            'seat_number'
 
         ]
     }

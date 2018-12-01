@@ -14,14 +14,14 @@ class Role(object):
 class Board(object):
     # name = 'BoardGame'
     # roles = []
-    def __init__(self, role_dict={}):
-        self.role_dict = role_dict
+    def __init__(self, role_config={}):
+        self.role_config = role_config
         self.role_index = {}
         for role in self.roles:
             self.role_index[role.name] = role
 
-    def set_role_dict(self, role_dict):
-        self.role_dict = role_dict
+    def set_role_config(self, role_config):
+        self.role_config = role_config
 
     def get_description(self, role_name):
         return self.role_index[role_name].description
@@ -31,7 +31,7 @@ class Board(object):
 
     def deal(self):
         res = []
-        for key, value in self.role_dict.items():
+        for key, value in self.role_config.items():
             if key in self.role_index:
                 role_name = key
             else: 
