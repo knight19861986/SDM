@@ -22,7 +22,8 @@ Step 2: Intallation and initiation of MongoDB
 Step 3: Intallation and initiation of Redis
 1. Install Redis:
   ```
-  mkdir redis && cd redis
+  mkdir redis
+  cd redis
   curl -O http://download.redis.io/redis-stable.tar.gz
   tar xzvf redis-stable.tar.gz
   cd redis-stable
@@ -59,7 +60,8 @@ Step 2: Intallation and initiation of MongoDB
 Step 3: Intallation and running of Redis
 1. Install Redis:
   ```
-  mkdir redis && cd redis
+  mkdir redis
+  cd redis
   curl -O http://download.redis.io/redis-stable.tar.gz
   tar xzvf redis-stable.tar.gz
   cd redis-stable
