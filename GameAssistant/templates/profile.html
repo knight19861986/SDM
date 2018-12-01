@@ -15,12 +15,20 @@
     <tbody>
         <tr>
             <td>
-                <form name="button_intiate_game" method="post" action="{% url 'GameAssistant:start_new' '' %}">{% csrf_token %}
-                    <input type="submit" value="New Game">
+                <form name="button_intiate_game" onSubmit="return boardNameCheck()">
+                    <td>
+                        <select name="board_name" id="select_board_name">
+                            <option value="">Choose Game</option>
+                        </select>
+
+                    </td>
+                    <td>
+                        <input type="submit" value="New Game">
+                    </td>
                 </form>
             </td>
             <td>
-                <form name="button_intiate_game" method="post" action="{% url 'GameAssistant:going_room' %}">{% csrf_token %}
+                <form name="button_recover_game" action="{% url 'GameAssistant:going_room' %}">
                     <input type="submit" value="Recover Game">
                 </form>
             </td>
@@ -34,10 +42,29 @@
 
 <script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
 <script language="javascript">
+    function boardNameCheck() {
+        board = document.button_intiate_game.board_name.value;
+        if (!board) {
+            window.alert("Please select a game first!");
+            return false;
+        }
+        else{
+            action = '/gameassistant/new/' + board;
+            document.button_intiate_game.setAttribute("action", action);
+            return true;
+        }
+    }
+
     $(document).ready(function(){
         $.getJSON("{% url 'GameAssistant:client_profile' %}", function(ret){
             $.each(ret, function(key,value){
                 $('#my_profile').append('<tr><td>'+ key +'</td><td>' + value +'</td></tr>');
+            });
+        })
+
+        $.getJSON("{% url 'GameAssistant:board_list' %}", function(ret){
+            $.each(ret, function(key,value){
+                $('#select_board_name').append('<option value=\"' + value + '\">' + value + '</option>');
             });
         })
     });

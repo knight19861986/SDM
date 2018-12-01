@@ -9,9 +9,9 @@ def ws_push(ws_type, ws_msg):
     def _ws_push(func):
         def wrapper(request, *callback_args, **callback_kwargs):
             try:
+                ws_id = get_ws_id_from_session(request)
                 response = func(request, *callback_args, **callback_kwargs)
                 if (response.status_code == 200) or (response.status_code == 302):
-                    ws_id = get_ws_id_from_session(request)
                     if ws_id:
                         layer = get_channel_layer()
                         async_to_sync(layer.group_send)(

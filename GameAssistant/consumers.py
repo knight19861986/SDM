@@ -21,7 +21,7 @@ class RoomConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-    async def refeshing(self, event):
+    async def refreshing(self, event):
         message = event['message']
         await self.send(text_data=json.dumps({
             'message': message

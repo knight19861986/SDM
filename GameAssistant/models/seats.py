@@ -7,15 +7,15 @@ class Seat(EmbeddedDocument):
     
     seat_number = IntField(default = 0, required=True)
     game_code = StringField(max_length = 200, required=True)
-    seat_state = IntField(default = 0, required=True)
+    role = StringField(max_length = 200, default = "", required=True)
+    seat_state = IntField(default = SeatState.empty.value)
     user_id = StringField(max_length = 200, default = "")
     time_created = DateTimeField(default = datetime.now)
     time_modified = DateTimeField(default = datetime.now)
 
     meta = {
         'indexes': [
-            'game_code',
-            'subuser_id'
+            'seat_number'
 
         ]
     }

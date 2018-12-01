@@ -21,6 +21,6 @@ class RefreshType(Enum):
     nothing = 0
     username = 1
     seat = 2
-    other_01 = 4 #For future scalability
-    other_02 = 8 #For future scalability
+    role = 4
+    room = 8
 
