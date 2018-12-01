@@ -19,11 +19,6 @@ def index(request, errorcode):
 
     return render(request, "home.html", {'error_msg': msg})
 
-############### Remove later #################
-def tab(request):
-    return render(request, "tab_example.html")
-##############################################
-
 @check_auth('guest')
 def sign_up(request, errorcode):
     messages = {
