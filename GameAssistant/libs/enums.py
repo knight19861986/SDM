@@ -21,6 +21,6 @@ class RefreshType(Enum):
     nothing = 0
     username = 1
     seat = 2
-    role = 4
+    gamestate = 4
     room = 8
 
