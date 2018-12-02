@@ -145,7 +145,7 @@ def get_user_infor(request):
         return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
 
 
-@ws_push('refreshing', RefreshType.seat.value+RefreshType.role.value) 
+@ws_push('refreshing', RefreshType.seat.value+RefreshType.gamestate.value) 
 @check_game_state(GameState.preparing.value, 'superuser')
 def start(request):
     try:
@@ -163,7 +163,7 @@ def start(request):
         return HttpResponseBadRequest('Unknown error while running game.start! Details: {0}'.format(e))
 
 
-@ws_push('refreshing', RefreshType.seat.value)
+@ws_push('refreshing', RefreshType.seat.value+RefreshType.gamestate.value)
 @check_game_state(GameState.started.value, 'superuser')
 def end(request):
     try:

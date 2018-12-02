@@ -141,6 +141,12 @@
                     $('#button_role').attr( "onclick", "showRole('" + ret['Role'] + "', '" + ret['Description'] +"')");
                     $('#button_role').removeAttr("disabled");
                 }
+                if (ret['GameState'] & 2){
+                    window.alert('The game is started!');
+                }
+                if (ret['GameState'] & 4){
+                    window.alert('The game is ended!');
+                }
             });
         };
 
