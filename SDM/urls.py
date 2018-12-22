@@ -19,5 +19,5 @@ from django.conf.urls import include
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^gameassistant/', include('GameAssistant.urls', namespace='GameAssistant')),
+    url(r'^ga/', include('GameAssistant.urls', namespace='GameAssistant')),
 ]
