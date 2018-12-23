@@ -9,7 +9,7 @@ urlpatterns = [
     ################ Home ##################
     url(r'^((?P<errorcode>\d)|)$', home.index, name='home_index'),
     url(r'^sign-up/((?P<errorcode>\d)|)$', home.sign_up, name='sign_up'),
-    url(r'^sign-up/succces/$', home.sign_up_success, name='sign_up_succces'),
+    url(r'^sign-up/success/$', home.sign_up_success, name='sign_up_succces'),
     url(r'^sign-in/((?P<errorcode>\d)|)$', home.sign_in, name='sign_in'),
 
     ################ Start #################
