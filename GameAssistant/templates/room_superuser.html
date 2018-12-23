@@ -227,7 +227,7 @@
         $.getJSON("{% url 'GameAssistant:game_information' %}", function(ret){
             $('#roomnumber').text(ret['RoomNumber']);
             $('#boardname').text(ret['BoardName']);
-            $('#button_gamecode').attr( "onClick", "showGameCode(" + ret['GameCode'] + ")");
+            $('#button_gamecode').attr( "onClick", "showGameCode('" + ret['GameCode'] + "')");
             ws_id = ret['WsId'];
             var webSocket = new WebSocket('ws://' + window.location.host +'/ws/' + ws_id + '/');
             webSocket.onopen = function(event){
