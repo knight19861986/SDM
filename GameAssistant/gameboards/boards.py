@@ -24,10 +24,16 @@ class Board(object):
         self.role_config = role_config
 
     def get_description(self, role_name):
-        return self.role_index[role_name].description
+        if role_name in self.role_index:
+            return self.role_index[role_name].description
+        else:
+            return ''
 
     def get_maximum(self, role_name):
-        return self.role_index[role_name].maximum
+        if role_name in self.role_index:
+            return self.role_index[role_name].maximum
+        else:
+            return 0
 
     def deal(self):
         res = []

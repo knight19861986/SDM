@@ -121,7 +121,7 @@ def get_game_infor(request):
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running game.get_game_infor! Details: {0}'.format(e))
 
 
 @check_auth('user')
@@ -142,7 +142,7 @@ def get_user_infor(request):
             return JsonResponse(ret, safe=False)
         return HttpResponseBadRequest('Game not existed!')
     except Exception as e:
-        return HttpResponseBadRequest('Unknown error while running game.get_game! Details: {0}'.format(e))
+        return HttpResponseBadRequest('Unknown error while running game.get_user_infor! Details: {0}'.format(e))
 
 
 @ws_push('refreshing', RefreshType.seat.value+RefreshType.gamestate.value) 
