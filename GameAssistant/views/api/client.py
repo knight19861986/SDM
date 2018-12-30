@@ -78,8 +78,9 @@ def exit(request):
     if 'client_id' in request.session:
         #To clean the subclients temporarily:
         client_id = get_client_id_from_session(request)
-        client = Client.objects(client_id = client_id).first()
-        client.clear_subclients()
+        if not Game.objects(client_id = client_id):
+            client = Client.objects(client_id = client_id).first()
+            client.clear_subclients()
 
         request.session.flush()
         url = reverse('GameAssistant:sign_in', args=[''])
