@@ -34,7 +34,7 @@ Step 3: Intallation and initiation of Redis
 Step 4: Initiation and running of the application
 1. Open a new terminal and run `python manage.py migrate` to apply the data migration
 2. Run the application server using `python manage.py runserver`
-3. Visit http://localhost:8000/gameassistant/ to verify if it is working.
+3. Visit http://localhost:8000/ga/ to verify if it is working.
 
 ### Ubuntu
 
@@ -72,7 +72,7 @@ Step 3: Intallation and running of Redis
 Step 4: Initiation and running of the application
 1. Open a new terminal and run `python3 manage.py migrate` to apply the data migration
 2. Run the application server using `python3 manage.py runserver`
-3. Visit http://localhost:8000/gameassistant/ to verify if it is working.
+3. Visit http://localhost:8000/ga/ to verify if it is working.
 
 ### Windows
 
