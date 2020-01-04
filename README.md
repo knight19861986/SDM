@@ -4,7 +4,7 @@
 
 These instructions assume you use Python 3.
 
-Step 1: Intallation and configuration of python
+Step 1: Installation and configuration of python
 1. Install Python (Please find instructions from google).
 2. Setup virtualenv and install dependencies:
   ```
@@ -12,14 +12,14 @@ Step 1: Intallation and configuration of python
   source <name of venv>/bin/activate
   pip install -r requirements.txt
   ```
-Step 2: Intallation and initiation of MongoDB
+Step 2: Installation and initiation of MongoDB
 1. Install MongoDB (See https://docs.mongodb.com/guides/server/install/).
 2. Run `<mongodb installation dir>/bin/mongod` to start MongoDB
 3. Open another terminal and run `<mongodb installation dir>/bin/mongo`
 (See https://docs.mongodb.com/manual/mongo/#start-the-mongo-shell-and-connect-to-mongodb)
 4. Run `use testdb` to create the database we are going to use
 
-Step 3: Intallation and initiation of Redis
+Step 3: Installation and initiation of Redis
 1. Install Redis:
   ```
   mkdir redis
