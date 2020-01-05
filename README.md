@@ -5,7 +5,7 @@
 These instructions assume you use Python 3.
 
 Step 1: Installation and configuration of python
-1. Install Python (Please find instructions from google).
+1. Install Python (See https://docs.python-guide.org/starting/install3/osx/).
 2. Setup virtualenv and install dependencies:
   ```
   python3 -m venv <name of venv>  # The executable might also be called just `python`
@@ -20,7 +20,7 @@ Step 2: Installation and initiation of MongoDB
 4. Run `use testdb` to create the database we are going to use
 
 Step 3: Installation and initiation of Redis
-1. Install Redis:
+1. Install Redis (See https://redis.io/topics/quickstart):
   ```
   mkdir redis
   cd redis
@@ -58,7 +58,7 @@ Step 2: Installation and initiation of MongoDB
 4. Run `use testdb` to create the database we are going to use
 
 Step 3: Installation and running of Redis
-1. Install Redis:
+1. Install Redis (See https://redis.io/topics/quickstart):
   ```
   mkdir redis
   cd redis
