@@ -76,4 +76,4 @@ Step 4: Initiation and running of the application
 
 ### Windows
 
-Will be updated later
+Will update later
