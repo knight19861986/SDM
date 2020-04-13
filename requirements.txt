@@ -1,6 +1,6 @@
 django==2.2.12
 mongoengine
 pymongo
-djongo
 channels
 channels_redis
+djongo
