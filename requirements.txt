@@ -1,6 +1,7 @@
 django==2.2.12
-mongoengine
-pymongo
-channels
-channels_redis
-djongo
+mongoengine==0.15.0
+pymongo==3.6.1
+channels==2.1.5
+channels_redis==2.3.1
+sqlparse==0.2.4
+djongo==1.2.29
